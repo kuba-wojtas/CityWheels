@@ -23,6 +23,12 @@
 - Tests: all confirmed bookings vs hand-calculated table, 1 min past each boundary, 3 non-cancellable statuses, cancel tomorrow, time zones, bad / past / after-start cancel time, rounding to cents, fee never refunded.
 - Checked the tests catch the boundary bug: changed `>=` to `>` -> CW-1007 and CW-1010 fail. Reverted.
 
+### SEARCH_POLICIES
+- Wrote 23 on-topic + 3 off-topic queries before any code, 10 of them worded differently than the docs (`mismatch`). Added 1 prompt injection query myself.
+- Prediction before running: BM25 misses ~half of mismatch queries. Actual: 2/10 missed -> too pessimistic.
+- Misses: "Where is the shop?" ("shop" is everywhere, answer section has no "where" words), "flat tyre" (zero shared words).
+- Off-topic 1/4 no match -> keyword search can't tell topic, only words.
+- Results: `eval/retrieval_results.md`.
+
 ### AI ASSISTANT NOTES
-- First DECISIONS / DEVLOG drafts from Claude were too long, written like an essay -> rewrote as short notes.
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.

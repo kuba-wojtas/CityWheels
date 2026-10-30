@@ -47,6 +47,26 @@
 - Tool returns `deposit_refund_method: same_as_paid` for every booking, rental method = `paid_with`.
 - Applied to card bookings too -> the rule in the policy is the same for both.
 
+### search_policies: BM25 over `##` sections
+- All 3 policy files are ~2-3k tokens -> could go straight into the system prompt, no search needed. Task asks for a search tool, so built one. Would matter with hundreds of docs.
+- Chunks = `##` sections (FAQ questions, price tables). ~22 sections.
+- Compared variants on 27 queries (`eval/retrieval.py`): BM25 21/23 hit@3 vs plain word overlap 20/23, and 21 vs 16 at hit@1.
+- Hand-written BM25 (~15 lines). Rejected: `rank_bm25` (dependency, barely maintained), embeddings (overkill for 3 files).
+
+### Crude stemming + stopwords
+- Strip -ing/-ed/-s, trailing e, doubled letter -> cancel/cancelled/cancelling, year/years match.
+- Without it hit@3 drops 21 -> 19. NLTK stemmer = overkill.
+
+### Heading weight x2
+- FAQ headings are the questions themselves -> strong signal.
+- x1 / x1.5 -> 20/23 hit@1, x2 / x3 -> 21/23. Plateau from x2, picked x2.
+- No finer tuning (x1.75 etc.): 23 own queries, differences of 1 query = overfitting.
+
+### No tuning for off-topic queries
+- Off-topic no match only 1/4 ("recommend" -> helmet section, "all" -> prices).
+- Could add stopwords / score threshold, but that's fitting to our own test set.
+- `no_match` is a hint, refusing is the model's job -> check in agent eval.
+
 ### cancel_at rules
 - In the past -> `invalid_cancel_time` (can't cancel yesterday).
 - At or after rental start -> `not_cancellable` (policy only covers cancelling before start).
