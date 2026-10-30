@@ -11,3 +11,9 @@
 
 ### SETUP
 - uv, pyproject.toml, ruff, pytest, empty `citywheels` package, `.env.example`.
+
+### GET_BOOKING
+- `data.py`: NOW, bookings loaded once, `find_booking` (internal, returns None).
+- `tools/bookings.py`: wraps it into `status` result for the model.
+- NOW as fixed +02:00 offset, not ZoneInfo("Europe/Warsaw") -> data already uses +02:00, ZoneInfo needs `tzdata` on Windows.
+- Tests: details of CW-1002, loose numbers, unknown, garbage input, cancelled booking still returned.
