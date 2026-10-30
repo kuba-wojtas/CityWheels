@@ -31,3 +31,23 @@
 
 ### Loose booking numbers
 - `cw-1002`, ` CW-1002 `, `1002` -> `CW-1002`. Customers often type just the number.
+
+### calculate_refund takes only booking id (+ optional cancel time)
+- Model never passes amounts or percentages -> nothing for it to calculate.
+- Tool returns hours before start + percent so the model can explain the result without math.
+- Two layers: `compute_refund` (pure rules, easy to test) and `calculate_refund` (lookup, validation, status).
+
+### Float + round() for money
+- Decimal is the textbook choice for money (float errors like 0.1 + 0.2).
+- Here all prices are whole or half euros -> exact in float, round(x, 2) keeps cents clean.
+- Would switch to Decimal with real prices (cents, VAT splits).
+
+### Deposit refund method not guessed
+- Policy: deposit comes back "the same way it was paid". Bookings only have `paid_with` for the booking.
+- Tool returns `deposit_refund_method: same_as_paid` for every booking, rental method = `paid_with`.
+- Applied to card bookings too -> the rule in the policy is the same for both.
+
+### cancel_at rules
+- In the past -> `invalid_cancel_time` (can't cancel yesterday).
+- At or after rental start -> `not_cancellable` (policy only covers cancelling before start).
+- No time zone -> shop time (+02:00).

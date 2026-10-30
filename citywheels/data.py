@@ -7,8 +7,10 @@ from pathlib import Path
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 POLICIES_DIR = DATA_DIR / "policies"
 
+SHOP_TZ = timezone(timedelta(hours=2))
+
 # Fixed "current time" from the data README, so answers don't change between runs.
-NOW = datetime(2026, 6, 10, 9, 0, tzinfo=timezone(timedelta(hours=2)))
+NOW = datetime(2026, 6, 10, 9, 0, tzinfo=SHOP_TZ)
 
 
 @dataclass(frozen=True)

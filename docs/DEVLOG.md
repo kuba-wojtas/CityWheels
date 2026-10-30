@@ -17,3 +17,12 @@
 - `tools/bookings.py`: wraps it into `status` result for the model.
 - NOW as fixed +02:00 offset, not ZoneInfo("Europe/Warsaw") -> data already uses +02:00, ZoneInfo needs `tzdata` on Windows.
 - Tests: details of CW-1002, loose numbers, unknown, garbage input, cancelled booking still returned.
+
+### CALCULATE_REFUND
+- Tiers compared as `timedelta`, not float hours -> exact 48h / 24h boundaries.
+- Tests: all confirmed bookings vs hand-calculated table, 1 min past each boundary, 3 non-cancellable statuses, cancel tomorrow, time zones, bad / past / after-start cancel time, rounding to cents, fee never refunded.
+- Checked the tests catch the boundary bug: changed `>=` to `>` -> CW-1007 and CW-1010 fail. Reverted.
+
+### AI ASSISTANT NOTES
+- First DECISIONS / DEVLOG drafts from Claude were too long, written like an essay -> rewrote as short notes.
+- Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
