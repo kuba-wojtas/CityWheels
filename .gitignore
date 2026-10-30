@@ -1,0 +1,16 @@
+# PYTHON
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# ROBOCZE
+.claude/
+CLAUDE.md
+_dev/
+*.scratch.md
+
+#RESZTA
+task-help-desk-agent.md
+TASK-README.md
