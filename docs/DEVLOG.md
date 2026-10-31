@@ -30,5 +30,12 @@
 - Off-topic 1/4 no match -> keyword search can't tell topic, only words.
 - Results: `eval/retrieval_results.md`.
 
+### QUOTE_PRICE
+- Duration rounded to whole minutes, integer math -> no float issues at the 6h / 24h boundaries.
+- Price list quirk: city bike 6h = 24 EUR, 7h = 20 EUR (day price). Same for e-bike (54 vs 40). Shorter rental costs more. Tool follows the price list as written.
+- Tests: all 10 bookings recalculated from price list (price, deposit, fee) -> all match. Plus each rule: started hour, exactly 6h, 6h01m, 26h, 31h, 6 vs 7 days, child seat per day, discount on add-ons, bikes x2, invalid input.
+- Mutation check: `rest > 6h` -> `>=` -> 6h test fails. Reverted.
+- Added missing return types (`compute_price`, `bm25`).
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.

@@ -67,6 +67,23 @@
 - Could add stopwords / score threshold, but that's fitting to our own test set.
 - `no_match` is a hint, refusing is the model's job -> check in agent eval.
 
+### Extra tool: quote_price
+- Not required by the task, but price questions need math (started hours, >6h = day, weekly discount). "Never makes up amounts" -> code does it, not the model.
+- Prices copied from prices.md into constants. Parsing the Markdown tables = overkill. Test checks constants against all 10 bookings.
+
+### quote_price inputs: no hidden defaults
+- `bike_type`, `duration_hours`, `bikes` required -> model has to fill them on purpose, ask if missing. Default `bikes=1` would silently underquote "for my family".
+- `add_ons` optional (no add-ons is not a guess).
+- No `booked_online` param -> customer rarely says, model would guess. Tool returns both fees instead.
+- Input is hours, not start/end dates -> customers ask "how much for 3 hours", not "10:00 to 13:00".
+
+### Rest after full days (UNCLEAR)
+- Policy doesn't say how to charge e.g. 26h. Same rule as for a single rental: rest >6h = another day, else started hours -> 26h city = 20 + 2 x 4 = 28 EUR.
+- Alternative: every started 24h = day price (40 EUR). Both match all bookings.
+
+### Weekly discount includes add-ons (UNCLEAR)
+- prices.md: "15% off the rental price". README: `rental_price_eur` = "price of the rental itself, with add-ons" -> discount on add-ons too.
+
 ### cancel_at rules
 - In the past -> `invalid_cancel_time` (can't cancel yesterday).
 - At or after rental start -> `not_cancellable` (policy only covers cancelling before start).

@@ -64,7 +64,9 @@ def term_counts(section: Section, heading_weight: float, use_stem: bool = True) 
     return counts
 
 
-def bm25(query_terms: set[str], docs: list[Counter], k1: float = 1.5, b: float = 0.75):
+def bm25(
+    query_terms: set[str], docs: list[Counter], k1: float = 1.5, b: float = 0.75
+) -> list[float]:
     n = len(docs)
     lengths = [sum(doc.values()) for doc in docs]
     avg_length = sum(lengths) / n
