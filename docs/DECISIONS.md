@@ -20,6 +20,16 @@
 - Rejected: OpenRouter free models (low limits, often overloaded -> flaky eval), Cerebras (similar to Groq, no reason to prefer).
 - Comparison becomes: closed model (Gemini) vs big open model in the cloud (Groq) vs small open model locally (Ollama).
 
+### Default models
+- Gemini: `gemini-3.5-flash-lite`. `gemini-3.8-flash` free tier = 5 RPM, 20 RPD -> not enough for one eval run (~30-45 requests). Flash-Lite = 15 RPM, 500 RPD.
+- Groq: `openai/gpt-oss-120b` (open weights, built for tool use).
+- Ollama: `qwen3:4b` (fits in 8 GB RAM).
+- Any of them can be overridden with `LLM_MODEL`.
+
+### scripts/smoke.py in the repo
+- One question, one tool call, one round trip with a real provider.
+- Lets anyone check their key and provider in seconds before running the agent or eval.
+
 ### CLI only
 - Task asks for CLI. Web/TUI considered, dropped -> time goes to agent, tests, eval.
 

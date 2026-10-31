@@ -41,6 +41,14 @@
 - Couldn't find the `models:read` permission when creating the token -> searched -> GitHub Models retired 2026-07-30 (changelog + docs).
 - Switched third provider to Groq.
 
+### LLM CLIENT
+- Checked current docs before writing config: endpoints, model names. Gemini 2.5 models (what I'd have guessed) are already legacy.
+- Free tier limits only visible in AI Studio: 3.8 Flash 5 RPM / 20 RPD, 3.5 Flash-Lite 15 RPM / 500 RPD -> Flash-Lite as default.
+- `llm.py`: provider table + `make_client`, missing key / unknown provider -> `ConfigError` with a clear message.
+- Smoke test with Gemini: tool call `get_booking({"booking_id":"CW-1002"})` -> answer "confirmed". Works.
+- Gemini 3 thought signatures: tool calls come with `extra_content.google.thought_signature`. Sent history without it -> 400 Bad Request. With full `message.model_dump()` -> OK. Agent loop must append the model's message as returned.
+- `load_dotenv()` looks for `.env` next to the calling script, not in the current dir -> didn't find it from a script outside the repo. Keep in mind for the CLI.
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
 - Claude suggested GitHub Models from memory (task lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: check provider docs before writing config.
