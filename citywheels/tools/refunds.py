@@ -1,7 +1,18 @@
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
 
+from pydantic import BaseModel, ConfigDict, Field
+
 from citywheels.data import NOW, SHOP_TZ, Booking, find_booking, normalize_booking_id
+
+
+class CalculateRefundArgs(BaseModel):
+    model_config = ConfigDict(coerce_numbers_to_str=True)
+    booking_id: str = Field(description="Booking number, e.g. CW-1002")
+    cancel_at: str | None = Field(
+        default=None,
+        description="When the customer would cancel, ISO 8601 date and time. Leave out for now.",
+    )
 
 
 @dataclass(frozen=True)

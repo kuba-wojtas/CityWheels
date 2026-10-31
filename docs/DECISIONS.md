@@ -30,6 +30,28 @@
 - One question, one tool call, one round trip with a real provider.
 - Lets anyone check their key and provider in seconds before running the agent or eval.
 
+### Pydantic for tool arguments
+- Tool arguments come from the model = untrusted input. Pydantic validates them and generates the JSON schema, so schema and code can't drift apart.
+- Already installed (dependency of `openai`) -> no new dependency.
+- Bad args / unknown tool -> `invalid_arguments` / `unknown_tool` result sent back to the model, it can retry. No crash.
+- `booking_id` sent as a number (1002) is coerced to "1002".
+- Exceptions inside a tool (= our bug) are not caught -> fail loudly.
+
+### Agent loop
+- Plain loop, max 6 steps, then a fixed "contact the staff" answer.
+- Model's message appended with `model_dump()` (Gemini thought signature).
+- History passed in and extended in place -> conversation memory in the CLI = keep the same list.
+- Returns `AgentResult` (answer, tool calls with results, steps, tokens) -> used by eval.
+
+### System prompt
+- Short sentences, each tied to a requirement or a trap in the data (season-dependent hours -> date in the prompt, amounts only from tools, not found, ask when info is missing, staff decide, refuse + contact, prompt injection, non-English questions).
+- Date and weekday filled from NOW, not typed by hand.
+- Staff contact written into the prompt (it's from cancellations.md) -> every refusal has it, no need to search first.
+
+### Default temperature
+- Wanted 0 for repeatable answers. Gemini 3 docs: "strongly recommend keeping the temperature at its default value of 1.0", lower can cause looping.
+- Kept default, measure variance with repeated eval runs instead.
+
 ### CLI only
 - Task asks for CLI. Web/TUI considered, dropped -> time goes to agent, tests, eval.
 

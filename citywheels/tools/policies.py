@@ -4,7 +4,14 @@ from collections import Counter
 from dataclasses import dataclass
 from functools import cache
 
+from pydantic import BaseModel, Field
+
 from citywheels.data import POLICIES_DIR
+
+
+class SearchPoliciesArgs(BaseModel):
+    query: str = Field(description="What to look for, in English")
+
 
 STOPWORDS = frozenset(
     "a an the is are am be do does did i you we me my your our it its to of in on at for "

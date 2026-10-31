@@ -1,4 +1,7 @@
 from dataclasses import asdict, dataclass
+from typing import Literal
+
+from pydantic import BaseModel, Field
 
 # Copied from data/policies/prices.md. test_prices.py checks them against every booking,
 # so a change in the price list that isn't made here shows up as a failing test.
@@ -10,6 +13,13 @@ ONLINE_BOOKING_FEE_EUR = 2.0
 WEEKLY_DISCOUNT = 0.15
 
 MINUTES_PER_DAY = 24 * 60
+
+
+class QuotePriceArgs(BaseModel):
+    bike_type: Literal["city", "e-bike", "kids"]
+    duration_hours: float = Field(description="Rental length in hours, e.g. 24 for a day")
+    bikes: int = Field(description="Number of bikes")
+    add_ons: list[Literal["child_seat", "extra_lock", "helmet"]] = Field(default_factory=list)
 
 
 @dataclass(frozen=True)

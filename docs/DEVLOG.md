@@ -49,6 +49,27 @@
 - Gemini 3 thought signatures: tool calls come with `extra_content.google.thought_signature`. Sent history without it -> 400 Bad Request. With full `message.model_dump()` -> OK. Agent loop must append the model's message as returned.
 - `load_dotenv()` looks for `.env` next to the calling script, not in the current dir -> didn't find it from a script outside the repo. Keep in mind for the CLI.
 
+### AGENT LOOP
+- `agent.py`: loop, tool table, prompt. Pydantic args model next to each tool.
+- Fake model test builds real `ChatCompletion` objects -> `model_dump()` behaves like live. Tests: full round trip (tool result in 2nd request, thought signature kept), refund amount from code, not found, bad args / unknown tool / broken JSON, max steps, follow-up sees history.
+- Mutation check: rebuilt the assistant message by hand instead of `model_dump()` -> round trip test fails on missing `extra_content`. Reverted.
+- Live try with Gemini, 5 questions from the data README: all correct content, refusal with contact for "capital of Australia".
+- "e-bike for a whole day" answered from search_policies (40 EUR), not quote_price -> eval should accept both.
+
+### LANGUAGE BUG
+- English refund question -> answer in Spanish. Repeated 4x: German, Dutch, 1x English (+ hit 429).
+- 1st guess: "Reply in the customer's language" is vague -> changed to "language of the customer's last message". Still 2/5 English. Guess was wrong.
+- Compared variants, 5 runs each: no language line 5/5 English, "Reply in English, unless the customer writes in another language" 5/5. Picked the 2nd (keeps other languages).
+- Polish and German questions still answered in Polish / German, Polish query searched in English.
+- Small sample (5 runs) -> recheck in eval.
+- Polish "O której otwieracie w sobotę?" -> gave both seasons instead of using today's date. Eval case.
+
+### RATE LIMITS
+- 429 after ~17 requests in ~1.5 min (limit 15 RPM). Built-in retry in `openai` waits too short.
+- CLI needs a readable message instead of a stack trace, eval needs pacing.
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
 - Claude suggested GitHub Models from memory (task lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: check provider docs before writing config.
+- Claude's first fix for the language bug (reword the line) was a guess and didn't work. Measuring variants did.
+- Claude would have set temperature=0 out of habit; Gemini 3 docs say keep 1.0.
