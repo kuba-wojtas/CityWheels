@@ -68,8 +68,17 @@
 - 429 after ~17 requests in ~1.5 min (limit 15 RPM). Built-in retry in `openai` waits too short.
 - CLI needs a readable message instead of a stack trace, eval needs pacing.
 
+### CLI
+- `cli.py` + `[project.scripts]` -> `uv run citywheels`.
+- Moved fake client to `tests/fakes.py`, it can now raise scripted errors.
+- Tests: answer + tool lines, `-q`, config error, connection error hint, conversation memory, 429 mid-conversation drops the turn.
+- openai 3.x is built on `httpx2`, not `httpx` -> first version of the CLI tests failed on import.
+- Live: follow-up "what if I cancel on 12 June at 10:00?" -> `cancel_at: 2026-06-12T10:00:00+02:00` -> exactly 24h before CW-1001 starts -> 50% -> 70 EUR. Correct.
+- Live: missing Groq key and Ollama not running -> one-line messages.
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
-- Claude suggested GitHub Models from memory (task lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: check provider docs before writing config.
+- Claude suggested GitHub Models from memory (the task description lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: double check provider docs before writing config.
 - Claude's first fix for the language bug (reword the line) was a guess and didn't work. Measuring variants did.
 - Claude would have set temperature=0 out of habit; Gemini 3 docs say keep 1.0.
+- Claude assumed `openai` uses `httpx` (true for older versions) and imported it in tests -> ImportError. Current version uses `httpx2`.

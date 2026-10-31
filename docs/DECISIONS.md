@@ -52,6 +52,12 @@
 - Wanted 0 for repeatable answers. Gemini 3 docs: "strongly recommend keeping the temperature at its default value of 1.0", lower can cause looping.
 - Kept default, measure variance with repeated eval runs instead.
 
+### CLI shape
+- `citywheels "question"` = one answer, `citywheels` = conversation. Rejected `ask` / `chat` subcommands, two modes don't need them.
+- Tool calls shown by default (`[tool] name args -> status`), `-q` hides them. Makes it visible that amounts come from tools.
+- API errors (429, no connection, other status) -> one-line message. In a conversation the failed turn is removed from history, the session goes on.
+- `.env` loaded from the current dir (`find_dotenv(usecwd=True)`).
+
 ### CLI only
 - Task asks for CLI. Web/TUI considered, dropped -> time goes to agent, tests, eval.
 

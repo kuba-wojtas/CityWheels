@@ -1,8 +1,4 @@
-import copy
-import json
-from types import SimpleNamespace
-
-from openai.types.chat import ChatCompletion
+from fakes import FakeClient, completion, tool_call, tool_messages
 
 from citywheels.agent import (
     GIVE_UP_ANSWER,
@@ -12,55 +8,6 @@ from citywheels.agent import (
     run_agent,
     run_tool,
 )
-
-
-def completion(content=None, tool_calls=None) -> ChatCompletion:
-    return ChatCompletion.model_validate(
-        {
-            "id": "fake",
-            "object": "chat.completion",
-            "created": 0,
-            "model": "fake",
-            "choices": [
-                {
-                    "index": 0,
-                    "finish_reason": "tool_calls" if tool_calls else "stop",
-                    "message": {"role": "assistant", "content": content, "tool_calls": tool_calls},
-                }
-            ],
-            "usage": {"prompt_tokens": 100, "completion_tokens": 10, "total_tokens": 110},
-        }
-    )
-
-
-def tool_call(call_id: str, name: str, arguments) -> dict:
-    return {
-        "id": call_id,
-        "type": "function",
-        "function": {
-            "name": name,
-            "arguments": arguments if isinstance(arguments, str) else json.dumps(arguments),
-        },
-        "extra_content": {"google": {"thought_signature": "sig-123"}},
-    }
-
-
-class FakeClient:
-    """Replays scripted responses and records the messages sent on each request."""
-
-    def __init__(self, *responses: ChatCompletion):
-        self.responses = list(responses)
-        self.requests: list[list[dict]] = []
-        self.chat = SimpleNamespace(completions=SimpleNamespace(create=self._create))
-
-    def _create(self, model, messages, tools):
-        assert tools == TOOL_SCHEMAS
-        self.requests.append(copy.deepcopy(messages))
-        return self.responses.pop(0)
-
-
-def tool_messages(request: list[dict]) -> list[dict]:
-    return [json.loads(m["content"]) for m in request if m["role"] == "tool"]
 
 
 def test_tool_call_round_trip():
