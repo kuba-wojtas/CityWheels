@@ -28,11 +28,15 @@ class ConfigError(Exception):
     pass
 
 
-def make_client(provider: str | None = None, model: str | None = None) -> tuple[OpenAI, str]:
+def resolve_provider(provider: str | None = None) -> str:
     name = provider or os.getenv("LLM_PROVIDER") or "gemini"
     if name not in PROVIDERS:
         raise ConfigError(f"Unknown provider {name!r}, expected one of: {', '.join(PROVIDERS)}")
-    config = PROVIDERS[name]
+    return name
+
+
+def make_client(provider: str | None = None, model: str | None = None) -> tuple[OpenAI, str]:
+    config = PROVIDERS[resolve_provider(provider)]
 
     # Ollama ignores the key, but the OpenAI client refuses to start without one.
     api_key = "ollama"

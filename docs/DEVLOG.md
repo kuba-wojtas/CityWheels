@@ -76,6 +76,18 @@
 - Live: follow-up "what if I cancel on 12 June at 10:00?" -> `cancel_at: 2026-06-12T10:00:00+02:00` -> exactly 24h before CW-1001 starts -> 50% -> 70 EUR. Correct.
 - Live: missing Groq key and Ollama not running -> one-line messages.
 
+### MANUAL TESTING
+- Storm question ("storm in 2 days, rental tomorrow for 3 days, refund?") -> correct answer, says "contact the staff", but no email / phone.
+- Cause: prompt gives the contact only in the refusal line, the "staff decide" line just says "contact the staff".
+- Plan: add as eval case first, see it fail, then fix the prompt and rerun everything.
+
+### EVAL: PREDICTION (written before the first run)
+- 26 cases, Gemini 3.5 Flash-Lite, 3 runs each. Guess: ~19-21 stable.
+- Sure fail: `storm` (no contact, known prompt gap).
+- Likely fail: `late-return-fee` (no tool for late fees -> model does the math -> unsupported amount 18).
+- Flaky: `open-saturday-pl` (gave both seasons before), `price-two-city-8h` / `price-week-child-seat` (model may add price + fee itself), `change-booking` (needs booking + policy), `price-family-clarify` (may assume 1 bike instead of asking), `weather-tomorrow` (search hits "Bad weather").
+- Should pass: refunds incl. 48h / 24h edges (math is in code), off-topic, not found.
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
 - Claude suggested GitHub Models from memory (the task description lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: double check provider docs before writing config.
