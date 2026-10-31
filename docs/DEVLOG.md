@@ -37,5 +37,10 @@
 - Mutation check: `rest > 6h` -> `>=` -> 6h test fails. Reverted.
 - Added missing return types (`compute_price`, `bm25`).
 
+### GITHUB MODELS IS GONE
+- Couldn't find the `models:read` permission when creating the token -> searched -> GitHub Models retired 2026-07-30 (changelog + docs).
+- Switched third provider to Groq.
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
+- Claude suggested GitHub Models from memory (task lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: check provider docs before writing config.

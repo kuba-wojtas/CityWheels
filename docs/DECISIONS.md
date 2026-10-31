@@ -10,9 +10,15 @@
 - Would reconsider with many tools / multiple agents.
 
 ### One OpenAI-compatible client
-- Gemini, GitHub Models and Ollama all expose OpenAI chat completions format.
+- Gemini, Groq and Ollama all expose OpenAI chat completions format (GitHub Models planned first, see below).
 - Only base URL, key and model name change -> one code path, easy model comparison.
 - Rejected: native SDKs (3x the same loop), LiteLLM (extra dependency for 3 config entries).
+
+### Groq instead of GitHub Models
+- GitHub Models (listed in the task as a free option) was retired on 2026-07-30, API returns 410 Gone.
+- Groq: free tier, OpenAI-compatible, open models with tool calling.
+- Rejected: OpenRouter free models (low limits, often overloaded -> flaky eval), Cerebras (similar to Groq, no reason to prefer).
+- Comparison becomes: closed model (Gemini) vs big open model in the cloud (Groq) vs small open model locally (Ollama).
 
 ### CLI only
 - Task asks for CLI. Web/TUI considered, dropped -> time goes to agent, tests, eval.
