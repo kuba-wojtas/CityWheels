@@ -88,6 +88,19 @@
 - Flaky: `open-saturday-pl` (gave both seasons before), `price-two-city-8h` / `price-week-child-seat` (model may add price + fee itself), `change-booking` (needs booking + policy), `price-family-clarify` (may assume 1 bike instead of asking), `weather-tomorrow` (search hits "Bad weather").
 - Should pass: refunds incl. 48h / 24h edges (math is in code), off-topic, not found.
 
+### EVAL: BASELINE
+- 22/26 stable, 68/78 runs passed. Better than predicted (19-21).
+- `storm` 0/3 and `stolen-bike` 0/3: same prompt gap, contact missing. Stolen bike wasn't in my prediction -> confirms the cause is systematic, not one question.
+- `late-return-fee` 0/3: model computed 18 EUR itself (correct number, broken rule). Prompt rule ignored.
+- `open-saturday` 2/3: one run gave both seasons.
+- Checker limitation: "6.00 EUR" (1.5 x 4, also model math) not flagged, because 6 appears in the price list text ("longer than 6 hours"). Any number from tool results counts as supported.
+- Runner bug: progress not visible when output goes to a file (print buffering) -> `flush=True`.
+
+### EVAL: FIXES
+- Prompt: contact added to the "staff decide" line. New line: "When the answer depends on the date, like opening hours, use today's date."
+- New tool `calculate_late_fee`. Eval case changed to expect the tool + 18 EUR.
+- Rerun of the 5 changed cases x3: all 15 pass (were 2/3, 3/3, 0/3, 0/3, 0/3).
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
 - Claude suggested GitHub Models from memory (the task description lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: double check provider docs before writing config.

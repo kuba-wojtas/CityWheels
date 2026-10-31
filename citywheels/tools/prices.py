@@ -1,7 +1,9 @@
 from dataclasses import asdict, dataclass
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
+
+from citywheels.data import find_booking, normalize_booking_id, parse_shop_time
 
 # Copied from data/policies/prices.md. test_prices.py checks them against every booking,
 # so a change in the price list that isn't made here shows up as a failing test.
@@ -11,6 +13,7 @@ DEPOSIT_EUR = {"city": 50.0, "e-bike": 150.0, "kids": 30.0}
 ADD_ON_PER_DAY_EUR = {"child_seat": 3.0, "extra_lock": 0.0, "helmet": 0.0}
 ONLINE_BOOKING_FEE_EUR = 2.0
 WEEKLY_DISCOUNT = 0.15
+LATE_FEE_HOURLY_MULTIPLIER = 1.5
 
 MINUTES_PER_DAY = 24 * 60
 
@@ -95,4 +98,45 @@ def quote_price(
         **asdict(quote),
         "online_booking_fee_eur": ONLINE_BOOKING_FEE_EUR,
         "shop_booking_fee_eur": 0.0,
+    }
+
+
+class CalculateLateFeeArgs(BaseModel):
+    model_config = ConfigDict(coerce_numbers_to_str=True)
+    booking_id: str = Field(description="Booking number, e.g. CW-1008")
+    returned_at: str = Field(description="When the bikes come back, ISO 8601 date and time")
+
+
+def calculate_late_fee(booking_id: str, returned_at: str) -> dict:
+    booking = find_booking(booking_id)
+    if booking is None:
+        return {"status": "not_found", "booking_id": normalize_booking_id(booking_id)}
+    if booking.status not in ("confirmed", "in_progress"):
+        return {
+            "status": "not_applicable",
+            "booking_id": booking.id,
+            "booking_status": booking.status,
+        }
+    returned = parse_shop_time(returned_at)
+    if returned is None:
+        return {
+            "status": "invalid_return_time",
+            "booking_id": booking.id,
+            "reason": f"not an ISO 8601 date: {returned_at}",
+        }
+
+    minutes_late = max(0, round((returned - booking.end).total_seconds() / 60))
+    started_hours = -(-minutes_late // 60)
+    fee_per_hour = LATE_FEE_HOURLY_MULTIPLIER * HOURLY_EUR[booking.bike_type]
+    return {
+        "status": "ok",
+        "booking_id": booking.id,
+        "rental_end": booking.end.isoformat(),
+        "returned_at": returned.isoformat(),
+        "minutes_late": minutes_late,
+        "started_hours_late": started_hours,
+        "fee_per_bike_per_hour_eur": fee_per_hour,
+        "bikes": booking.bikes,
+        "late_fee_eur": round(booking.bikes * fee_per_hour * started_hours, 2),
+        "deposit_eur": booking.deposit_eur,
     }

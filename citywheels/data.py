@@ -62,3 +62,12 @@ def normalize_booking_id(raw: str) -> str:
 
 def find_booking(booking_id: str) -> Booking | None:
     return load_bookings().get(normalize_booking_id(booking_id))
+
+
+def parse_shop_time(text: str) -> datetime | None:
+    try:
+        when = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    # A time without a zone means shop time, that's what a customer saying "at 10:00" means.
+    return when if when.tzinfo else when.replace(tzinfo=SHOP_TZ)

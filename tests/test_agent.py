@@ -138,4 +138,10 @@ def test_quote_price_rejects_unknown_bike_type_before_running():
 def test_every_tool_has_a_schema():
     names = {s["function"]["name"] for s in TOOL_SCHEMAS}
 
-    assert names == {"search_policies", "get_booking", "calculate_refund", "quote_price"}
+    assert names == {
+        "search_policies",
+        "get_booking",
+        "calculate_refund",
+        "quote_price",
+        "calculate_late_fee",
+    }

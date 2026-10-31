@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from citywheels.data import NOW, SHOP_TZ, Booking, find_booking, normalize_booking_id
+from citywheels.data import NOW, Booking, find_booking, normalize_booking_id, parse_shop_time
 
 
 class CalculateRefundArgs(BaseModel):
@@ -68,16 +68,13 @@ def calculate_refund(booking_id: str, cancel_at: str | None = None) -> dict:
 
     when = NOW
     if cancel_at is not None:
-        try:
-            when = datetime.fromisoformat(cancel_at)
-        except ValueError:
+        when = parse_shop_time(cancel_at)
+        if when is None:
             return {
                 "status": "invalid_cancel_time",
                 "booking_id": booking.id,
                 "reason": f"not an ISO 8601 date: {cancel_at}",
             }
-        if when.tzinfo is None:
-            when = when.replace(tzinfo=SHOP_TZ)
         if when < NOW:
             return {
                 "status": "invalid_cancel_time",

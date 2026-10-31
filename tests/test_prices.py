@@ -1,7 +1,7 @@
 import pytest
 
 from citywheels.data import load_bookings
-from citywheels.tools.prices import quote_price
+from citywheels.tools.prices import calculate_late_fee, quote_price
 
 
 @pytest.mark.parametrize("booking", load_bookings().values(), ids=lambda b: b.id)
@@ -124,3 +124,43 @@ def test_invalid_input_is_rejected(bike_type, hours, bikes, add_ons):
 
     assert result["status"] == "invalid_input"
     assert result["reason"]
+
+
+def test_late_fee_counts_every_started_hour():
+    # CW-1008: one city bike, rental ends 12:00. 14:30 = 3 started hours x 1.5 x 4 EUR.
+    result = calculate_late_fee("CW-1008", "2026-06-10T14:30:00+02:00")
+
+    assert result["status"] == "ok"
+    assert result["minutes_late"] == 150
+    assert result["started_hours_late"] == 3
+    assert result["fee_per_bike_per_hour_eur"] == 6.0
+    assert result["late_fee_eur"] == 18.0
+
+
+@pytest.mark.parametrize(
+    "returned_at, fee",
+    [
+        ("2026-06-10T11:30:00+02:00", 0.0),
+        ("2026-06-10T12:00:00+02:00", 0.0),
+        ("2026-06-10T12:01", 6.0),
+    ],
+)
+def test_late_fee_on_time_or_one_minute_late(returned_at, fee):
+    assert calculate_late_fee("CW-1008", returned_at)["late_fee_eur"] == fee
+
+
+def test_late_fee_is_per_bike():
+    # CW-1002: two e-bikes, 1 started hour x 1.5 x 9 EUR x 2 bikes.
+    result = calculate_late_fee("CW-1002", "2026-06-12T18:20:00+02:00")
+
+    assert result["late_fee_eur"] == 27.0
+
+
+@pytest.mark.parametrize("booking_id", ["CW-1005", "CW-1006"])
+def test_late_fee_not_applicable_to_cancelled_or_completed(booking_id):
+    assert calculate_late_fee(booking_id, "2026-06-10T14:00")["status"] == "not_applicable"
+
+
+def test_late_fee_unknown_booking_and_bad_time():
+    assert calculate_late_fee("CW-9999", "2026-06-10T14:00")["status"] == "not_found"
+    assert calculate_late_fee("CW-1008", "at 2pm")["status"] == "invalid_return_time"

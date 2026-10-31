@@ -1,0 +1,264 @@
+{
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "runs": 3,
+  "date": "2026-10-31 16:46",
+  "commit": "4cf0270-dirty",
+  "results": [
+    {
+      "id": "open-saturday",
+      "steps": 2,
+      "input_tokens": 2385,
+      "output_tokens": 36,
+      "seconds": 1.4,
+      "answer": "We are open from 08:00 on Saturdays (from April to October).",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"opening hours Saturday\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "open-saturday-pl",
+      "steps": 2,
+      "input_tokens": 2387,
+      "output_tokens": 34,
+      "seconds": 1.3,
+      "answer": "W sobotę otwieramy o godzinie 08:00.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"opening hours Saturday\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "storm",
+      "steps": 2,
+      "input_tokens": 2418,
+      "output_tokens": 87,
+      "seconds": 1.3,
+      "answer": "If the weather service issues a storm warning for the day of the rental, you may get a full refund. However, the staff decide each case, so you will need to contact them directly:\n- Email: help@citywheels.example\n- Phone: +48 000 000 000",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"storm weather refund cancellation\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "stolen-bike",
+      "steps": 2,
+      "input_tokens": 2274,
+      "output_tokens": 71,
+      "seconds": 1.3,
+      "answer": "Report it to the police and call the staff at once. The staff decide about the deposit after reading the police report.\n\nContact the staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"stolen bike deposit\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "late-return-fee",
+      "steps": 2,
+      "input_tokens": 2293,
+      "output_tokens": 83,
+      "seconds": 2.0,
+      "answer": "If you return the bike at 14:30 (150 minutes late), the extra late return fee is €18.00.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_late_fee",
+          "arguments": "{\"returned_at\":\"2026-06-10T14:30:00\",\"booking_id\":\"CW-1008\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "open-saturday",
+      "steps": 2,
+      "input_tokens": 2385,
+      "output_tokens": 36,
+      "seconds": 1.3,
+      "answer": "We are open at 08:00 on Saturdays (from April to October).",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"Saturday opening hours\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "open-saturday-pl",
+      "steps": 2,
+      "input_tokens": 2387,
+      "output_tokens": 34,
+      "seconds": 1.5,
+      "answer": "W sobotę otwieramy o godzinie 08:00.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"opening hours Saturday\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "storm",
+      "steps": 2,
+      "input_tokens": 2419,
+      "output_tokens": 81,
+      "seconds": 1.7,
+      "answer": "If the weather service issues a storm warning for the day of the rental, you may get a full refund, but the staff decide each case. You need to contact the staff for this: help@citywheels.example, +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"storm bad weather refund cancellation\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "stolen-bike",
+      "steps": 2,
+      "input_tokens": 2274,
+      "output_tokens": 75,
+      "seconds": 2.2,
+      "answer": "Report it to the police and call the staff at once. The staff decide about the deposit after reading the police report. Since the staff decide, please contact them at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"stolen bike deposit\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "late-return-fee",
+      "steps": 2,
+      "input_tokens": 2293,
+      "output_tokens": 79,
+      "seconds": 1.5,
+      "answer": "If you bring the bike back at 14:30, the extra late return fee will be €18.00.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_late_fee",
+          "arguments": "{\"returned_at\":\"2026-06-10T14:30:00\",\"booking_id\":\"CW-1008\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "open-saturday",
+      "steps": 2,
+      "input_tokens": 2385,
+      "output_tokens": 36,
+      "seconds": 1.4,
+      "answer": "We are open at 08:00 on Saturdays (from April to October).",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"opening hours Saturday\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "open-saturday-pl",
+      "steps": 2,
+      "input_tokens": 2387,
+      "output_tokens": 39,
+      "seconds": 1.5,
+      "answer": "W sobotę otwieramy o godzinie 08:00 (od kwietnia do października).",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"opening hours Saturday\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "storm",
+      "steps": 2,
+      "input_tokens": 2419,
+      "output_tokens": 83,
+      "seconds": 1.6,
+      "answer": "If the weather service issues a storm warning for the day of the rental, the customer may get a full refund, but the staff decide each case. You will need to contact the staff to check: help@citywheels.example, +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"storm bad weather refund cancellation\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "stolen-bike",
+      "steps": 2,
+      "input_tokens": 2274,
+      "output_tokens": 74,
+      "seconds": 1.6,
+      "answer": "Report the theft to the police and call the staff at once. The staff decide about the deposit after reading the police report.\n\nYou can contact the staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"stolen bike deposit\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "late-return-fee",
+      "steps": 2,
+      "input_tokens": 2293,
+      "output_tokens": 79,
+      "seconds": 1.3,
+      "answer": "If you bring the bike back at 14:30, the extra late fee will be 18.00 EUR.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_late_fee",
+          "arguments": "{\"booking_id\":\"CW-1008\",\"returned_at\":\"2026-06-10T14:30:00\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    }
+  ]
+}

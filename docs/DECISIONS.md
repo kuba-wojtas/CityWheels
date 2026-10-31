@@ -121,6 +121,13 @@
 - No `booked_online` param -> customer rarely says, model would guess. Tool returns both fees instead.
 - Input is hours, not start/end dates -> customers ask "how much for 3 hours", not "10:00 to 13:00".
 
+### Extra tool: calculate_late_fee (added after the baseline eval)
+- Baseline: model computed the late fee itself (18 EUR) in 3/3 runs, despite "Never calculate amounts yourself" in the prompt. It even called quote_price for 1h to get the hourly price.
+- A rule in the prompt is not a guardrail -> moved the math into code, same as refunds and prices.
+- In prices.py (it's a price list rule, reuses hourly prices). Fee per bike, every started hour, 0 when on time.
+- Works for `confirmed` and `in_progress`, `not_applicable` for cancelled / completed.
+- `parse_shop_time` moved to data.py, shared by refunds and late fee.
+
 ### Rest after full days (UNCLEAR)
 - Policy doesn't say how to charge e.g. 26h. Same rule as for a single rental: rest >6h = another day, else started hours -> 26h city = 20 + 2 x 4 = 28 EUR.
 - Alternative: every started 24h = day price (40 EUR). Both match all bookings.

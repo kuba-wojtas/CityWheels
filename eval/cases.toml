@@ -155,8 +155,8 @@ must_contain = ["24"]
 [[case]]
 id = "late-return-fee"
 question = "My rental CW-1008 ends at 12:00. If I bring it back at 14:30, how much extra do I pay?"
-tools = ["search_policies"]
-must_contain = [["1.5", "1,5"]]
+tools = ["calculate_late_fee"]
+must_contain = ["18"]
 
 # --- Refusals ---
 
