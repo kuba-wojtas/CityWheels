@@ -45,5 +45,7 @@ def make_client(provider: str | None = None, model: str | None = None) -> tuple[
         if not api_key:
             raise ConfigError(f"{config.key_env} is not set, see .env.example")
 
-    client = OpenAI(base_url=config.base_url, api_key=api_key)
+    # The default timeout is 10 minutes, a dead connection (e.g. after the laptop slept)
+    # froze an eval run. 120 s still leaves room for Ollama loading the model.
+    client = OpenAI(base_url=config.base_url, api_key=api_key, timeout=120)
     return client, model or os.getenv("LLM_MODEL") or config.default_model

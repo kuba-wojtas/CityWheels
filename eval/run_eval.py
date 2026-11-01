@@ -15,9 +15,9 @@ from datetime import datetime
 from pathlib import Path
 
 from dotenv import find_dotenv, load_dotenv
-from openai import RateLimitError
+from openai import APIError, RateLimitError
 
-from citywheels.agent import ToolCall, new_conversation, run_agent
+from citywheels.agent import AgentResult, ToolCall, new_conversation, run_agent
 from citywheels.llm import make_client, resolve_provider
 
 EVAL_DIR = Path(__file__).parent
@@ -87,24 +87,30 @@ def check(case: dict, answer: str, calls: list[ToolCall]) -> list[str]:
     return failures
 
 
+def run_turn(client, model: str, messages: list[dict], question: str) -> AgentResult:
+    turn_start = len(messages)
+    try:
+        return run_agent(client, model, messages, question)
+    except RateLimitError:
+        del messages[turn_start:]
+        print("  rate limited, waiting 60 s", flush=True)
+        time.sleep(60)
+        return run_agent(client, model, messages, question)
+
+
 def run_case(client, model: str, case: dict, pace: float) -> dict:
     messages = new_conversation()
     calls: list[ToolCall] = []
     record = {"id": case["id"], "steps": 0, "input_tokens": 0, "output_tokens": 0}
     started = time.monotonic()
     for question in case.get("turns", [case.get("question")]):
-        turn_start = len(messages)
         try:
-            result = run_agent(client, model, messages, question)
-        except RateLimitError:
-            del messages[turn_start:]
-            print("  rate limited, waiting 60 s", flush=True)
-            time.sleep(60)
-            try:
-                result = run_agent(client, model, messages, question)
-            except RateLimitError:
-                record |= {"answer": "", "tool_calls": [], "failures": ["rate limited"]}
-                return record
+            result = run_turn(client, model, messages, question)
+        except APIError as e:
+            # A failed request counts as a failed case instead of stopping the whole run.
+            failure = f"request failed: {type(e).__name__}"
+            record |= {"answer": "", "tool_calls": [], "failures": [failure]}
+            return record
         calls += result.tool_calls
         record["steps"] += result.steps
         record["input_tokens"] += result.input_tokens
@@ -189,27 +195,28 @@ def main():
     client, model = make_client(provider, args.model)
     selected = [c for c in cases if not args.only or c["id"] in args.only]
 
-    results = []
-    for n in range(1, args.runs + 1):
-        for case in selected:
-            record = run_case(client, model, case, PACE.get(provider, 0.0))
-            record["run"] = n
-            results.append(record)
-            status = "PASS" if not record["failures"] else "FAIL " + "; ".join(record["failures"])
-            print(f"[{n}/{args.runs}] {case['id']}: {status}", flush=True)
-
     run = {
         "provider": provider,
         "model": model,
         "runs": args.runs,
         "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "commit": git_commit(),
-        "results": results,
+        "results": [],
     }
     runs_dir = EVAL_DIR / "runs"
     runs_dir.mkdir(exist_ok=True)
     path = runs_dir / f"{datetime.now():%Y%m%d-%H%M}-{provider}.json"
-    path.write_text(json.dumps(run, indent=2, ensure_ascii=False))
+
+    for n in range(1, args.runs + 1):
+        for case in selected:
+            record = run_case(client, model, case, PACE.get(provider, 0.0))
+            record["run"] = n
+            run["results"].append(record)
+            # Saved after every case, so a hang or Ctrl+C doesn't lose what already ran.
+            path.write_text(json.dumps(run, indent=2, ensure_ascii=False))
+            status = "PASS" if not record["failures"] else "FAIL " + "; ".join(record["failures"])
+            print(f"[{n}/{args.runs}] {case['id']}: {status}", flush=True)
+
     if not args.only:
         (EVAL_DIR / "results.md").write_text(write_report([run], selected))
     print(f"saved {path}")

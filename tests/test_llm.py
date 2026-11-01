@@ -57,3 +57,9 @@ def test_empty_model_variable_falls_back_to_default(monkeypatch):
     monkeypatch.setenv("LLM_MODEL", "")
 
     assert make_client("ollama")[1] == "qwen3:4b"
+
+
+def test_client_gives_up_on_a_dead_connection_after_two_minutes():
+    client, _ = make_client("ollama")
+
+    assert client.timeout == 120

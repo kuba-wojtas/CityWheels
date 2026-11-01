@@ -101,6 +101,12 @@
 - New tool `calculate_late_fee`. Eval case changed to expect the tool + 18 EUR.
 - Rerun of the 5 changed cases x3: all 15 pass (were 2/3, 3/3, 0/3, 0/3, 0/3).
 
+### EVAL: HUNG CONTROL RUN
+- Control run froze at case 40/78 (39/40 passed so far, 1 fail: `open-saturday` with winter hours again). Laptop went to sleep, request never returned.
+- Results were only saved at the end -> the 40 answers were lost.
+- Fixes: client timeout 120 s (default is 10 min), results saved after every case, failed request = failed case instead of a crash.
+- Use `caffeinate -i` for long runs on macOS.
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
 - Claude suggested GitHub Models from memory (the task description lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: double check provider docs before writing config.
