@@ -1,7 +1,7 @@
 """Run the agent on eval/cases.toml and write eval/results.md.
 
 Run:    uv run python eval/run_eval.py [--provider gemini] [--model ...] [--runs 3]
-Report: uv run python eval/run_eval.py --report eval/runs/<file>.json [more files...]
+Report: uv run python eval/run_eval.py --report eval/runs/<file>.json [more files...] [--recheck]
 """
 
 import argparse
@@ -11,13 +11,14 @@ import statistics
 import subprocess
 import time
 import tomllib
+from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
 
 from dotenv import find_dotenv, load_dotenv
 from openai import APIError, RateLimitError
 
-from citywheels.agent import AgentResult, ToolCall, new_conversation, run_agent
+from citywheels.agent import AgentResult, ToolCall, new_conversation, run_agent, run_tool
 from citywheels.llm import make_client, resolve_provider
 
 EVAL_DIR = Path(__file__).parent
@@ -32,6 +33,9 @@ AMOUNT = re.compile(
     re.IGNORECASE,
 )
 NUMBER = re.compile(r"\d+(?:\.\d+)?")
+
+# Some models write typographic apostrophes and hyphens ("couldn’t", "CW‑1002").
+TYPOGRAPHY = str.maketrans({"’": "'", "‘": "'", "‐": "-", "‑": "-", "–": "-"})
 
 
 def to_number(text: str) -> float:
@@ -59,7 +63,7 @@ def unsupported_amounts(answer: str, calls: list[ToolCall]) -> list[str]:
 
 def check(case: dict, answer: str, calls: list[ToolCall]) -> list[str]:
     failures = []
-    text = answer.lower()
+    text = answer.translate(TYPOGRAPHY).lower()
     called = {c.name for c in calls}
 
     for tool in case.get("tools", []):
@@ -121,9 +125,28 @@ def run_case(client, model: str, case: dict, pace: float) -> dict:
     record["seconds"] = round(time.monotonic() - started - pace * record["steps"], 1)
     record["answer"] = result.answer
     record["gave_up"] = result.gave_up
-    record["tool_calls"] = [{"name": c.name, "arguments": c.arguments} for c in calls]
+    record["tool_calls"] = [asdict(c) for c in calls]
     record["failures"] = check(case, result.answer, calls)
     return record
+
+
+def recheck(run: dict, cases: list[dict]) -> None:
+    """Score saved answers again with the current checks, without asking the model again.
+
+    Older runs didn't save tool results. The tools are deterministic (fixed date, fixed
+    data), so running them again with the saved arguments gives the same results.
+    """
+    by_id = {c["id"]: c for c in cases}
+    for record in run["results"]:
+        if not record["answer"]:
+            continue
+        calls = [
+            ToolCall(
+                t["name"], t["arguments"], t.get("result") or run_tool(t["name"], t["arguments"])
+            )
+            for t in record["tool_calls"]
+        ]
+        record["failures"] = check(by_id[record["id"]], record["answer"], calls)
 
 
 def git_commit() -> str:
@@ -183,11 +206,15 @@ def main():
     parser.add_argument("--runs", type=int, default=3)
     parser.add_argument("--only", nargs="+", help="case ids to run")
     parser.add_argument("--report", nargs="+", type=Path, help="rebuild results.md from runs")
+    parser.add_argument("--recheck", action="store_true", help="score saved answers again")
     args = parser.parse_args()
 
     cases = tomllib.loads((EVAL_DIR / "cases.toml").read_text())["case"]
     if args.report:
         runs = [json.loads(path.read_text()) for path in args.report]
+        if args.recheck:
+            for run in runs:
+                recheck(run, cases)
         (EVAL_DIR / "results.md").write_text(write_report(runs, cases))
         return
 

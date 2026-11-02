@@ -120,6 +120,21 @@
 - Ollama `qwen3:4b`, refund question: thinking on (default) 123 s, correct. `reasoning_effort="none"` (fix suggested in a GitHub issue) 299 s, more tokens, and the reasoning leaked into the answer ("Okay, let me process this step by step..."). Kept the default.
 - ~2 min per question -> Ollama gets 1 eval run (~1 h), not 3. Gemini and Groq 3 runs.
 
+### EVAL: GROQ (same prompt as Gemini)
+- `gpt-oss-120b`, 3 runs, 26 min. 20/26 stable, 66/78. Faster (0.8 s) and fewer tokens (1793) than Gemini.
+- Ignores today's date: `open-saturday` 0/3 and `-pl` 0/3, gives winter hours (sometimes only winter = wrong in June).
+- Polish question -> English answer 3/3. The language line that fixed Gemini is read as "always English".
+- Asks "how many bikes?" for "a city bike for a week" (0/3) and "an e-bike for a day" (1/3 asked). Our "ask if bikes missing" rule taken too literally.
+- `change-booking` 1/3: once said changes are "decided by staff" without searching. Wrong.
+- 0 unsupported amounts, same as Gemini -> the code guardrail holds across models, prompt rules don't.
+- `unknown-booking` 1/3 was a checker bug: "couldn’t" with a typographic apostrophe. Fixed (normalize ’ and non-breaking hyphens) -> 21/26, 67/78.
+- Decided: keep the prompt as is for the comparison (same prompt, different models). No Groq-specific tuning.
+
+### EVAL: RECHECK
+- Runs now save tool results too. `--report ... --recheck` scores saved answers with the current checks.
+- Older runs have no tool results -> rebuilt by running the tools again with saved arguments (tools are deterministic).
+- Gemini control rechecked = same 26/26 -> recheck reproduces scores.
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
 - Claude suggested GitHub Models from memory (the task description lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: double check provider docs before writing config.

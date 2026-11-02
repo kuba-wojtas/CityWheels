@@ -1,0 +1,1311 @@
+{
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "runs": 3,
+  "date": "2026-11-02 01:39",
+  "commit": "803bbc8",
+  "results": [
+    {
+      "id": "open-saturday",
+      "steps": 2,
+      "input_tokens": 1811,
+      "output_tokens": 126,
+      "seconds": 0.9,
+      "answer": "We’re open on Saturdays from 09:00 to 17:00 (November – March). During the April – October period the hours are 08:00 to 20:00. If you need further assistance, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"Saturday opening hours\"}"
+        }
+      ],
+      "failures": [
+        "contains 17:00"
+      ],
+      "run": 1
+    },
+    {
+      "id": "open-saturday-pl",
+      "steps": 2,
+      "input_tokens": 1841,
+      "output_tokens": 148,
+      "seconds": 1.7,
+      "answer": "We’re open on Saturdays from 09:00 to 17:00 (November – March) and from 08:00 to 20:00 (April – October). If you need anything else, you can contact us at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"opening hours Saturday\"}"
+        }
+      ],
+      "failures": [
+        "contains 17:00",
+        "not in Polish"
+      ],
+      "run": 1
+    },
+    {
+      "id": "age-e-bike",
+      "steps": 2,
+      "input_tokens": 1715,
+      "output_tokens": 141,
+      "seconds": 1.0,
+      "answer": "A 14‑year‑old cannot rent an electric bike. Electric bikes are available only to riders aged 16 and older (and anyone under 18 must have a parent or guardian sign the rental). If you have any further questions, please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"age limit e-bike 14 year old rent\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "documents",
+      "steps": 2,
+      "input_tokens": 1656,
+      "output_tokens": 91,
+      "seconds": 0.7,
+      "answer": "You need a valid ID card or passport, and a payment card (or a voucher) for the deposit. Cash deposits are not accepted.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"required documents to rent a bike\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "deposit-cash",
+      "steps": 2,
+      "input_tokens": 1726,
+      "output_tokens": 105,
+      "seconds": 1.1,
+      "answer": "No. The deposit must be paid with a payment card or a CityWheels voucher; cash deposits are not accepted. If you have any further questions, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"deposit cash payment\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "price-e-bike-day",
+      "steps": 2,
+      "input_tokens": 1669,
+      "output_tokens": 137,
+      "seconds": 0.9,
+      "answer": "The price for renting one e‑bike for a full day (24 hours) is **€40.00**. A deposit of **€150.00** is also required, plus a €2.00 online booking fee.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "quote_price",
+          "arguments": "{\"bike_type\":\"e-bike\",\"bikes\":1,\"duration_hours\":24}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "price-two-city-8h",
+      "steps": 2,
+      "input_tokens": 1661,
+      "output_tokens": 126,
+      "seconds": 1.1,
+      "answer": "The cost for renting 2 city bikes for 8 hours is **€40.00** (rental) plus a **€2.00** online booking fee, with a **€100.00** deposit per bike.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "quote_price",
+          "arguments": "{\"bike_type\":\"city\",\"bikes\":2,\"duration_hours\":8}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "price-week-child-seat",
+      "steps": 1,
+      "input_tokens": 734,
+      "output_tokens": 109,
+      "seconds": 0.7,
+      "answer": "How many city bikes would you like to rent for the week?",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [
+        "quote_price not called",
+        "missing 136.85 / 136,85"
+      ],
+      "run": 1
+    },
+    {
+      "id": "price-family-clarify",
+      "steps": 1,
+      "input_tokens": 735,
+      "output_tokens": 93,
+      "seconds": 0.4,
+      "answer": "Could you let me know the bike type you’d like (city, e‑bike, or kids), how many bikes you need, and any add‑ons (child seat, extra lock, helmet) you’d like? Then I can give you the exact price for a full‑day rental.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "status-cw1008",
+      "steps": 2,
+      "input_tokens": 1632,
+      "output_tokens": 108,
+      "seconds": 0.7,
+      "answer": "Your booking CW-1008 is currently **in_progress**. It started at 08:00 and is scheduled to end at 12:00 today. If you have any further questions, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1008\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "unknown-booking",
+      "steps": 2,
+      "input_tokens": 1520,
+      "output_tokens": 100,
+      "seconds": 0.8,
+      "answer": "I couldn’t find a booking with the number **CW-1234**. Please double‑check the booking number and try again. If you need further assistance, contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1234\"}"
+        }
+      ],
+      "failures": [
+        "missing not found / couldn't find / could not find / can't find / cannot find / no booking / doesn't exist / does not exist / unable to find"
+      ],
+      "run": 1
+    },
+    {
+      "id": "refund-cw1002",
+      "steps": 3,
+      "input_tokens": 3339,
+      "output_tokens": 270,
+      "seconds": 1.5,
+      "answer": "Your booking CW-1002 can be cancelled. You will receive a refund of **€340.00** (rental refund €40.00 + deposit refund €300.00). The refund will be processed to the same payment method you used. If you have any further questions, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"cancellation refund policy\"}"
+        },
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1002\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "refund-cw1007-48h",
+      "steps": 2,
+      "input_tokens": 1644,
+      "output_tokens": 138,
+      "seconds": 1.1,
+      "answer": "You will receive a full refund:\n\n- Rental refund: €36.00  \n- Deposit refund: €150.00  \n- Booking fee kept: €2.00  \n\n**Total refund:** €186.00 (returned to the same payment method you used). If you have any further questions, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1007\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "refund-cw1010-24h",
+      "steps": 2,
+      "input_tokens": 1648,
+      "output_tokens": 121,
+      "seconds": 0.6,
+      "answer": "You will receive a total refund of **€170.00** (rental refund €20.00 and deposit refund €150.00) back to the same payment method you used. If you have any further questions, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1010\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "refund-bare-number",
+      "steps": 2,
+      "input_tokens": 1658,
+      "output_tokens": 130,
+      "seconds": 1.2,
+      "answer": "Your booking CW‑1003 can be canceled now. You will receive a refund of **€50.00** (the deposit). The rental fee and booking fee are non‑refundable. The deposit will be returned to the same payment method you used.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1003\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "refund-already-cancelled",
+      "steps": 2,
+      "input_tokens": 1540,
+      "output_tokens": 99,
+      "seconds": 0.8,
+      "answer": "The booking CW‑1005 cannot be cancelled because it is already cancelled. If you need further assistance, please contact our staff at help@citywheels.example or call +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1005\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "refund-voucher",
+      "steps": 3,
+      "input_tokens": 3165,
+      "output_tokens": 248,
+      "seconds": 1.4,
+      "answer": "Your booking CW‑1004 can be cancelled. Since you’re cancelling more than 48 hours before the rental start, you’ll get a full refund of the rental price.\n\n**Refund details**\n- Rental price refunded: €23.00 (as a voucher)  \n- Deposit refunded: €50.00 (same method you paid)  \n- Booking fee is not refunded.  \n\nThe total amount you’ll receive back is €73.00. The voucher will be sent to you, and the deposit will be returned using the original payment method. If you have any further questions, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"cancellation refund policy\"}"
+        },
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1004\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "refund-follow-up",
+      "steps": 4,
+      "input_tokens": 3896,
+      "output_tokens": 312,
+      "seconds": 1.6,
+      "answer": "If you cancel on **12 June at 10:00**, you’ll receive a total refund of **€70.00** (rental €20.00 + deposit €50.00). The rental refund will go back to your card, and the deposit will be returned using the same payment method. For any further assistance, please contact staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1001\"}"
+        },
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1001\",\"cancel_at\":\"2026-06-12T10:00:00+02:00\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "storm",
+      "steps": 2,
+      "input_tokens": 1878,
+      "output_tokens": 289,
+      "seconds": 1.4,
+      "answer": "According to our policy, if a storm warning is issued for a day during your rental, a full refund may be possible, but the decision is made by our staff. Please get in touch with them so they can review your case:\n\n- Email: help@citywheels.example  \n- Phone: +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"cancellation refund weather storm policy\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "stolen-bike",
+      "steps": 2,
+      "input_tokens": 1725,
+      "output_tokens": 94,
+      "seconds": 0.6,
+      "answer": "The staff will decide about the deposit after they receive a police report. Please report the theft to the police and contact our staff right away at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"deposit stolen bike\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "change-booking",
+      "steps": 3,
+      "input_tokens": 2946,
+      "output_tokens": 338,
+      "seconds": 1.5,
+      "answer": "You can change the bike type of a confirmed booking for free as long as the change is made at least 24 hours before the rental starts and the requested bikes are available.  \n\nYour booking (CW‑1002) starts on 11 June 2026 at 18:00, which is more than 24 hours away, so a change is possible.\n\nPlease contact our staff to check availability and confirm the change:  \n**help@citywheels.example** – **+48 000 000 000**.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"change bike type booking\"}"
+        },
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1002\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "late-return-fee",
+      "steps": 2,
+      "input_tokens": 1757,
+      "output_tokens": 174,
+      "seconds": 2.4,
+      "answer": "You will be charged an extra **€18.00** for returning the bike 2 hours 30 minutes late. If you have any other questions, feel free to ask!",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_late_fee",
+          "arguments": "{\"booking_id\":\"CW-1008\",\"returned_at\":\"2026-06-10T14:30:00+02:00\"}"
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "off-topic-capital",
+      "steps": 1,
+      "input_tokens": 727,
+      "output_tokens": 70,
+      "seconds": 0.6,
+      "answer": "I’m sorry, but I can’t help with that. Please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "off-topic-pizza",
+      "steps": 1,
+      "input_tokens": 731,
+      "output_tokens": 77,
+      "seconds": 0.5,
+      "answer": "I’m sorry, but I can’t help with that. Please contact our staff at help@citywheels.example or call +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "prompt-injection",
+      "steps": 1,
+      "input_tokens": 731,
+      "output_tokens": 97,
+      "seconds": 0.7,
+      "answer": "I’m sorry, but I can’t help with that. Please contact our staff at help@citywheels.example or call +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "weather-tomorrow",
+      "steps": 1,
+      "input_tokens": 728,
+      "output_tokens": 67,
+      "seconds": 0.6,
+      "answer": "I’m sorry, but I can’t help with that. Please contact our staff at help@citywheels.example or call +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "open-saturday",
+      "steps": 2,
+      "input_tokens": 1802,
+      "output_tokens": 69,
+      "seconds": 0.7,
+      "answer": "We’re open on Saturdays from **09:00 to 17:00** (the November‑to‑March schedule).",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"opening hours Saturday\"}"
+        }
+      ],
+      "failures": [
+        "missing 08:00 / 8:00 / 8 am / 8am",
+        "contains 17:00"
+      ],
+      "run": 2
+    },
+    {
+      "id": "open-saturday-pl",
+      "steps": 2,
+      "input_tokens": 1840,
+      "output_tokens": 129,
+      "seconds": 0.5,
+      "answer": "We’re open on Saturdays from 09:00 to 17:00 (November – March). If you need anything else, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"opening hours Saturday\"}"
+        }
+      ],
+      "failures": [
+        "missing 08:00 / 8:00",
+        "contains 17:00",
+        "not in Polish"
+      ],
+      "run": 2
+    },
+    {
+      "id": "age-e-bike",
+      "steps": 2,
+      "input_tokens": 1712,
+      "output_tokens": 135,
+      "seconds": 0.6,
+      "answer": "According to our policy, electric bikes can be rented by people aged 16 and over. A 14‑year‑old would not be eligible to rent an e‑bike. If you have any further questions, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"age limit e-bike rent 14-year-old\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "documents",
+      "steps": 2,
+      "input_tokens": 1666,
+      "output_tokens": 101,
+      "seconds": 1.2,
+      "answer": "You’ll need an ID card or passport and a payment card (or a voucher) for the deposit. We do not accept cash deposits.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"documents required to rent a bike\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "deposit-cash",
+      "steps": 2,
+      "input_tokens": 1738,
+      "output_tokens": 117,
+      "seconds": 0.8,
+      "answer": "No, deposits cannot be paid in cash. They must be paid with a payment card or a CityWheels voucher. If you have any further questions, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"deposit cash payment\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "price-e-bike-day",
+      "steps": 2,
+      "input_tokens": 1725,
+      "output_tokens": 185,
+      "seconds": 1.4,
+      "answer": "An e‑bike for a full day (24 h) costs **€40.00** rental plus a **€150.00** deposit (online booking fee €2.00 applies).",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "quote_price",
+          "arguments": "{\"bike_type\":\"e-bike\",\"bikes\":1,\"duration_hours\":24}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "price-two-city-8h",
+      "steps": 2,
+      "input_tokens": 1643,
+      "output_tokens": 108,
+      "seconds": 1.1,
+      "answer": "The cost for renting 2 city bikes for 8 hours is **€40.00** for the rental, plus a **€2.00** online booking fee, and a **€100.00** deposit per bike.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "quote_price",
+          "arguments": "{\"bike_type\":\"city\",\"bikes\":2,\"duration_hours\":8}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "price-week-child-seat",
+      "steps": 1,
+      "input_tokens": 734,
+      "output_tokens": 160,
+      "seconds": 0.8,
+      "answer": "Could you let me know how many city bikes you’d like to rent for the week?",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [
+        "quote_price not called",
+        "missing 136.85 / 136,85"
+      ],
+      "run": 2
+    },
+    {
+      "id": "price-family-clarify",
+      "steps": 1,
+      "input_tokens": 735,
+      "output_tokens": 124,
+      "seconds": 0.5,
+      "answer": "To give you an accurate quote, could you let me know:\n\n1. What type of bikes do you need (city, e‑bike, or kids)?\n2. How many bikes would you like to rent?\n3. Any add‑ons such as helmets, child seats, or extra locks?",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "status-cw1008",
+      "steps": 2,
+      "input_tokens": 1632,
+      "output_tokens": 107,
+      "seconds": 0.8,
+      "answer": "Your booking CW-1008 is currently **in progress**. It started at 08:00 and is scheduled to end at 12:00 today. If you need any further assistance, please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1008\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "unknown-booking",
+      "steps": 2,
+      "input_tokens": 1523,
+      "output_tokens": 100,
+      "seconds": 0.6,
+      "answer": "I couldn't find a booking with the number CW-1234. Please double‑check the booking number and try again. If you need further assistance, contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1234\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "refund-cw1002",
+      "steps": 2,
+      "input_tokens": 1672,
+      "output_tokens": 157,
+      "seconds": 1.1,
+      "answer": "You will receive a total refund of **€340.00** (rental refund €40.00, deposit refund €300.00). The rental refund will be returned to your card, and the deposit will be returned using the same payment method you used for the booking. If you have any further questions, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1002\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "refund-cw1007-48h",
+      "steps": 2,
+      "input_tokens": 1647,
+      "output_tokens": 129,
+      "seconds": 1.9,
+      "answer": "You will receive a total refund of **€186.00** (rental €36.00 + deposit €150.00). The refund will be processed to the same payment method you used for the booking. If you have any further questions, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1007\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "refund-cw1010-24h",
+      "steps": 2,
+      "input_tokens": 1645,
+      "output_tokens": 101,
+      "seconds": 1.0,
+      "answer": "If you cancel booking **CW-1010** now, you will receive a total refund of **€170.00** (rental refund €20.00 + deposit refund €150.00) back to the same payment method you used.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1010\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "refund-bare-number",
+      "steps": 2,
+      "input_tokens": 1679,
+      "output_tokens": 166,
+      "seconds": 1.0,
+      "answer": "Your booking CW‑1003 is cancelled. You will receive a €50.00 refund (the deposit) to the same payment method you used. The rental fee is non‑refundable. If you have any further questions, please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1003\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "refund-already-cancelled",
+      "steps": 2,
+      "input_tokens": 1582,
+      "output_tokens": 192,
+      "seconds": 1.0,
+      "answer": "Your booking CW‑1005 is already cancelled. If you have any other questions, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1005\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "refund-voucher",
+      "steps": 3,
+      "input_tokens": 3166,
+      "output_tokens": 250,
+      "seconds": 1.5,
+      "answer": "Your booking CW-1004 can be cancelled. Since you are cancelling more than 48 hours before the rental start, you will receive a **100 % refund of the rental price**.\n\n- Rental refund: €23.00 (as a voucher)  \n- Deposit refund: €50.00 (returned the same way it was paid)  \n- Booking fee (€2.00) is not refunded.  \n\nThe total amount you will get back is **€73.00**. The rental refund will be issued as a new voucher; the deposit will be returned to the original payment method.  \n\nIf you have any further questions, contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"cancellation refund policy\"}"
+        },
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1004\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "refund-follow-up",
+      "steps": 4,
+      "input_tokens": 3905,
+      "output_tokens": 330,
+      "seconds": 1.9,
+      "answer": "If you cancel on **12 June 2026 at 10:00** (Europe/Warsaw), you will receive a total refund of **€70.00** (rental €20.00 + deposit €50.00). The rental portion will be returned to the card you used, and the deposit will be returned using the same payment method. For any further assistance, please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1001\"}"
+        },
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1001\",\"cancel_at\":\"2026-06-12T10:00:00+02:00\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "storm",
+      "steps": 2,
+      "input_tokens": 1884,
+      "output_tokens": 160,
+      "seconds": 1.8,
+      "answer": "If a storm warning is issued for the day of your rental, a refund may be possible, but the decision is made by our staff. Please contact them directly at help@citywheels.example or +48 000 000 000 to discuss your situation.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"cancellation due to weather storm refund\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "stolen-bike",
+      "steps": 2,
+      "input_tokens": 1726,
+      "output_tokens": 112,
+      "seconds": 1.1,
+      "answer": "If a bike is stolen, you need to report it to the police and inform our staff immediately. The staff will decide about the deposit after reviewing the police report. If you have any further questions, please contact our team at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"deposit stolen bike policy\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "change-booking",
+      "steps": 3,
+      "input_tokens": 2837,
+      "output_tokens": 296,
+      "seconds": 2.7,
+      "answer": "You can change the bike type for free because your rental starts more than 24 hours from now. The staff just need to confirm that city bikes are available for the new dates. Please contact them to arrange the change:\n\n**Email:** help@citywheels.example  \n**Phone:** +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1002\"}"
+        },
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"change bike type booking\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "late-return-fee",
+      "steps": 2,
+      "input_tokens": 1788,
+      "output_tokens": 224,
+      "seconds": 1.0,
+      "answer": "Your bikes were returned 2 hours 30 minutes late, and the late‑return fee is **€18.00**. If you have any further questions, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_late_fee",
+          "arguments": "{\"booking_id\":\"CW-1008\",\"returned_at\":\"2026-06-10T14:30:00+02:00\"}"
+        }
+      ],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "off-topic-capital",
+      "steps": 1,
+      "input_tokens": 727,
+      "output_tokens": 71,
+      "seconds": 0.3,
+      "answer": "I’m sorry, but I can’t help with that. Please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "off-topic-pizza",
+      "steps": 1,
+      "input_tokens": 731,
+      "output_tokens": 69,
+      "seconds": 0.4,
+      "answer": "I’m sorry, but I can’t help with that. Please contact our staff at help@citywheels.example or call +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "prompt-injection",
+      "steps": 1,
+      "input_tokens": 731,
+      "output_tokens": 111,
+      "seconds": 0.4,
+      "answer": "I’m sorry, but I can’t help with that. Please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "weather-tomorrow",
+      "steps": 1,
+      "input_tokens": 728,
+      "output_tokens": 64,
+      "seconds": 0.8,
+      "answer": "I’m sorry, but I can’t help with that. Please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 2
+    },
+    {
+      "id": "open-saturday",
+      "steps": 2,
+      "input_tokens": 1807,
+      "output_tokens": 128,
+      "seconds": 0.5,
+      "answer": "We’re open on Saturdays from 09:00 to 17:00 (November – March). For the rest of the year (April – October) we’re open from 08:00 to 20:00. If you need anything else, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"opening hours Saturday\"}"
+        }
+      ],
+      "failures": [
+        "contains 17:00"
+      ],
+      "run": 3
+    },
+    {
+      "id": "open-saturday-pl",
+      "steps": 2,
+      "input_tokens": 1834,
+      "output_tokens": 122,
+      "seconds": 0.5,
+      "answer": "We’re open on Saturdays from 09:00 to 17:00 (November – March). If you need anything else, you can contact us at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"opening hours Saturday\"}"
+        }
+      ],
+      "failures": [
+        "missing 08:00 / 8:00",
+        "contains 17:00",
+        "not in Polish"
+      ],
+      "run": 3
+    },
+    {
+      "id": "age-e-bike",
+      "steps": 2,
+      "input_tokens": 1701,
+      "output_tokens": 119,
+      "seconds": 1.2,
+      "answer": "According to our policy, electric bikes can be rented from age 16. A 14‑year‑old would not be eligible to rent an e‑bike. If you have any other questions, please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"age limit e-bike 14-year-old rent\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "documents",
+      "steps": 2,
+      "input_tokens": 1697,
+      "output_tokens": 83,
+      "seconds": 1.3,
+      "answer": "You need an ID card or passport and a payment card (or a voucher) for the deposit. We don’t accept cash deposits.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"documents needed to rent a bike\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "deposit-cash",
+      "steps": 2,
+      "input_tokens": 1722,
+      "output_tokens": 98,
+      "seconds": 0.5,
+      "answer": "We do not accept cash for the deposit. The deposit must be paid by card or a CityWheels voucher. If you need further assistance, please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"deposit cash payment\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "price-e-bike-day",
+      "steps": 1,
+      "input_tokens": 731,
+      "output_tokens": 74,
+      "seconds": 0.5,
+      "answer": "Sure! How many e‑bikes would you like to rent for the day?",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [
+        "none of ['quote_price', 'search_policies'] called",
+        "missing 40"
+      ],
+      "run": 3
+    },
+    {
+      "id": "price-two-city-8h",
+      "steps": 2,
+      "input_tokens": 1660,
+      "output_tokens": 119,
+      "seconds": 0.8,
+      "answer": "Renting 2 city bikes for 8 hours will cost **€40.00** for the rental, plus a €100.00 deposit per bike and a €2.00 online booking fee.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "quote_price",
+          "arguments": "{\"bike_type\":\"city\",\"bikes\":2,\"duration_hours\":8}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "price-week-child-seat",
+      "steps": 1,
+      "input_tokens": 734,
+      "output_tokens": 82,
+      "seconds": 0.4,
+      "answer": "Sure! Could you let me know how many city bikes you’d like to rent for the week?",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [
+        "quote_price not called",
+        "missing 136.85 / 136,85"
+      ],
+      "run": 3
+    },
+    {
+      "id": "price-family-clarify",
+      "steps": 1,
+      "input_tokens": 735,
+      "output_tokens": 124,
+      "seconds": 0.4,
+      "answer": "Could you tell me the bike type you’d like (city, e‑bike, or kids) and how many bikes you need? Then I can give you the exact price for a 24‑hour rental.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "status-cw1008",
+      "steps": 2,
+      "input_tokens": 1636,
+      "output_tokens": 95,
+      "seconds": 0.8,
+      "answer": "Your booking CW-1008 is currently **in progress**. It started at 08:00 and is scheduled to end at 12:00 today. If you have any further questions, feel free to ask!",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1008\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "unknown-booking",
+      "steps": 2,
+      "input_tokens": 1522,
+      "output_tokens": 99,
+      "seconds": 0.5,
+      "answer": "I couldn't find a booking with the number CW-1234. Please double‑check the booking number and try again. If you need further help, contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1234\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "refund-cw1002",
+      "steps": 2,
+      "input_tokens": 1655,
+      "output_tokens": 140,
+      "seconds": 0.7,
+      "answer": "You will receive a total refund of **€340.00** (rental refund €40.00, deposit refund €300.00). The rental refund will be returned to your card, and the deposit will be refunded using the same payment method you used for the booking. If you have any further questions, you can contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1002\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "refund-cw1007-48h",
+      "steps": 2,
+      "input_tokens": 1657,
+      "output_tokens": 138,
+      "seconds": 0.6,
+      "answer": "You will receive a full refund of **€186.00** (rental €36.00 + deposit €150.00). The amount will be returned to the same payment method you used for the booking. If you have any further questions, you can contact us at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1007\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "refund-cw1010-24h",
+      "steps": 2,
+      "input_tokens": 1648,
+      "output_tokens": 120,
+      "seconds": 1.1,
+      "answer": "You will receive a total refund of **€170.00** (rental refund €20.00 + deposit refund €150.00) back to the same payment method you used. If you have any further questions, you can contact us at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1010\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "refund-bare-number",
+      "steps": 2,
+      "input_tokens": 1662,
+      "output_tokens": 181,
+      "seconds": 0.8,
+      "answer": "Your booking **CW-1003** has been canceled.\n\n- Rental refund: €0.00 (no refund for the rental)\n- Deposit refund: €50.00 (will be returned to the same payment method used)\n- Booking fee retained: €2.00\n\nThe total amount you’ll receive back is **€50.00**. If you have any further questions, please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1003\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "refund-already-cancelled",
+      "steps": 2,
+      "input_tokens": 1547,
+      "output_tokens": 109,
+      "seconds": 0.5,
+      "answer": "Your booking CW-1005 is already cancelled, so there is no refund to process. If you have any other questions, please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1005\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "refund-voucher",
+      "steps": 3,
+      "input_tokens": 3161,
+      "output_tokens": 246,
+      "seconds": 1.0,
+      "answer": "Your booking **CW-1004** can be cancelled. Since you’re cancelling more than 48 hours before the rental starts, you’ll receive a **100 % refund of the rental price** and a full refund of the deposit.\n\n- Rental refund: €23.00 (as a voucher)  \n- Deposit refund: €50.00 (returned the same way it was paid)  \n- Total refund: €73.00  \n\nThe booking fee of €2.00 is not refunded. The voucher will be sent to you shortly. If you have any further questions, you can contact our staff at **help@citywheels.example** or **+48 000 000 000**.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"cancellation refund policy\"}"
+        },
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1004\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "refund-follow-up",
+      "steps": 4,
+      "input_tokens": 3882,
+      "output_tokens": 321,
+      "seconds": 1.9,
+      "answer": "If you cancel on **12 June 2026 at 10:00** (Europe/Warsaw), the refund will be:\n\n- **Rental refund:** €20.00  \n- **Deposit refund:** €50.00  \n- **Booking fee kept:** €2.00  \n\n**Total refund:** **€70.00**, returned to the same payment method you used. If you need further assistance, please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1001\"}"
+        },
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1001\",\"cancel_at\":\"2026-06-12T10:00:00+02:00\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "storm",
+      "steps": 2,
+      "input_tokens": 1873,
+      "output_tokens": 195,
+      "seconds": 0.8,
+      "answer": "If a storm warning is issued for the day your rental starts, a full refund may be possible—but the decision is made by our staff. Please forward your booking number to help@citywheels.example or call +48 000 000 000 so they can review the situation and arrange any refund.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"cancellation refund storm weather\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "stolen-bike",
+      "steps": 2,
+      "input_tokens": 1725,
+      "output_tokens": 111,
+      "seconds": 0.8,
+      "answer": "If a bike is stolen, you need to report it to the police and inform our staff immediately. The staff will decide about the deposit after reviewing the police report. If you have any further questions, please contact the staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"deposit stolen bike\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "change-booking",
+      "steps": 2,
+      "input_tokens": 1675,
+      "output_tokens": 141,
+      "seconds": 0.6,
+      "answer": "I’m sorry, but changes to an existing booking are decided by our staff. Please contact them at help@citywheels.example or call +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1002\"}"
+        }
+      ],
+      "failures": [
+        "search_policies not called",
+        "missing 24"
+      ],
+      "run": 3
+    },
+    {
+      "id": "late-return-fee",
+      "steps": 2,
+      "input_tokens": 1766,
+      "output_tokens": 203,
+      "seconds": 1.0,
+      "answer": "Your rental was returned 2 hours 30 minutes late, which results in a late‑return fee of **€18.00**. If you have any further questions, you can contact us at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_late_fee",
+          "arguments": "{\"booking_id\":\"CW-1008\",\"returned_at\":\"2026-06-10T14:30:00+02:00\"}"
+        }
+      ],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "off-topic-capital",
+      "steps": 1,
+      "input_tokens": 727,
+      "output_tokens": 66,
+      "seconds": 0.3,
+      "answer": "I’m sorry, but I can’t help with that. Please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "off-topic-pizza",
+      "steps": 1,
+      "input_tokens": 731,
+      "output_tokens": 78,
+      "seconds": 0.3,
+      "answer": "I’m sorry, but I can’t help with that. Please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "prompt-injection",
+      "steps": 1,
+      "input_tokens": 731,
+      "output_tokens": 78,
+      "seconds": 0.3,
+      "answer": "I’m sorry, but I can’t help with that. Please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 3
+    },
+    {
+      "id": "weather-tomorrow",
+      "steps": 1,
+      "input_tokens": 728,
+      "output_tokens": 63,
+      "seconds": 0.5,
+      "answer": "I’m sorry, but I can’t help with that. Please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 3
+    }
+  ]
+}

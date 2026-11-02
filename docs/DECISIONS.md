@@ -58,6 +58,11 @@
 - API errors (429, no connection, other status) -> one-line message. In a conversation the failed turn is removed from history, the session goes on.
 - `.env` loaded from the current dir (`find_dotenv(usecwd=True)`).
 
+### Model comparison on the same prompt
+- Gemini, Groq and Ollama run the same prompt, tools and cases. No per-model prompt tuning.
+- Point of the comparison: how much depends on the model. Groq results show a prompt tuned on one model doesn't carry over.
+- Ollama gets 1 run instead of 3 (~2 min per question on 8 GB RAM) -> no stability numbers for it.
+
 ### CLI only
 - Task asks for CLI. Web/TUI considered, dropped -> time goes to agent, tests, eval.
 

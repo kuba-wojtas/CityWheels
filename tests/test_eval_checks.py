@@ -1,5 +1,5 @@
 import pytest
-from run_eval import check, unsupported_amounts
+from run_eval import check, recheck, unsupported_amounts
 
 from citywheels.agent import ToolCall
 
@@ -83,3 +83,31 @@ def test_polish_answer_check():
 
     assert check(case, "Otwieramy o 8:00 w sobotę.", []) == []
     assert check(case, "We open at 8:00 on Saturday.", []) == ["not in Polish"]
+
+
+def test_typographic_apostrophes_and_hyphens_match_plain_ones():
+    case = {"must_contain": [["couldn't find"], "CW-1234"]}
+
+    assert check(case, "I couldn’t find booking CW‑1234.", []) == []
+
+
+def test_recheck_rebuilds_tool_results_from_saved_arguments():
+    case = {"id": "refund", "tools": ["calculate_refund"], "must_contain": ["340"]}
+    run = {
+        "results": [
+            {
+                "id": "refund",
+                "answer": "You get 340 EUR back.",
+                "tool_calls": [
+                    {"name": "calculate_refund", "arguments": '{"booking_id": "CW-1002"}'}
+                ],
+                "failures": ["stale failure from an older checker"],
+            },
+            {"id": "refund", "answer": "", "tool_calls": [], "failures": ["request failed"]},
+        ]
+    }
+
+    recheck(run, [case])
+
+    assert run["results"][0]["failures"] == []
+    assert run["results"][1]["failures"] == ["request failed"]
