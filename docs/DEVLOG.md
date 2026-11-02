@@ -1,5 +1,13 @@
 # Dev log
 
+Notes in the order things happened. Short version: tools and tests first, then the agent loop, then the evaluation (baseline run, fixes, control run), then the same eval on Groq and Ollama, then an external review and final runs.
+
+Terms used below:
+- baseline run = first full eval run on Gemini, before any fixes.
+- control run = full rerun after fixes, to check nothing else broke.
+- recheck = scoring saved answers again with newer checks, without calling the model.
+- checker = the automatic checks in `eval/run_eval.py`.
+
 ### DATA OBSERVATIONS
 - Hand-calculated refunds for all bookings (now = 2026-06-10 09:00 +02:00) -> expected values for tests.
 - CW-1007 - starts in exactly 48h -> policy says "48 hours or more" -> 100% (EDGE CASE).
@@ -176,6 +184,20 @@
 - Runner: single runs write their own .md next to the JSON, only `--report` writes results.md. Rate-limit waits not counted as time. `--cases` to run another case file.
 - Tried raising the Polish check to 2 diacritics -> a correct short answer ("Otwieramy w sobotę o 08:00.") failed its test. Reverted to 1.
 - Rechecked the saved runs: Gemini 78 -> 78, Groq 66 -> 66 (unknown-booking now passes, "has been canceled" now fails), Ollama 23 -> 24. No false alarms on real refusals.
+
+### FINAL RUNS
+- All three on commit 0cad7cc, no recheck: Gemini 26/27 stable (80/81), Groq 24/27 (74/81), Ollama 23/27 (1 run).
+- Gemini: `refund-voucher` 1/3 missed, right amount but didn't say it comes back as a voucher.
+- Groq: date + Polish still 0/3 (no Groq tuning, on purpose), `stolen-bike` 1x no contact.
+- Ollama: no voucher mention, no contact on stolen bike, 1 timeout (>120 s), and asked "Please tell me the number of bikes!" with "!" -> my clarify check wants "?". Checker miss.
+- Laptop battery died during the Ollama run. MacBook kept running, run finished, slower (memory).
+
+### HELD-OUT SET
+- 8 cases written by a separate Claude instance that could only read `data/`. Expected amounts checked by hand. Run once on Gemini (3x), nothing changed after.
+- 5/8 stable, 19/24 runs. Much lower than 26/27 on my own cases, which is the point of having it.
+- `price-two-ebikes-three-hours` 2/3: once "54 EUR + 2 EUR fee = 56 EUR". Model added two tool amounts itself, caught by the unsupported amount check. New kind of failure.
+- `student-discount-not-covered` 2/3: "We do not offer a student discount". Failed the refusal check, but the real problem: docs don't say there is none, they just don't mention it. Missing info turned into a fact.
+- `voucher-booking-refund-to-card` 0/3: answers correct ("refunded as a new voucher"), case expected the amount 23 which the question didn't ask for. Case too strict, left as is.
 
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.

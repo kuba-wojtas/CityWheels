@@ -5,12 +5,12 @@ __pycache__/
 venv/
 .env
 
-# ROBOCZE
+# Local working notes
 .claude/
 CLAUDE.md
 _dev/
 *.scratch.md
 
-#RESZTA
+# Assignment files (not part of the submission)
 task-help-desk-agent.md
 TASK-README.md

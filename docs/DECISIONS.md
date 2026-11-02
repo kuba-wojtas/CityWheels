@@ -113,6 +113,7 @@ Two reviews with no project context (a fresh Claude agent and Codex), read-only.
 - All 3 policy files are ~2-3k tokens -> could go straight into the system prompt, no search needed. Task asks for a search tool, so built one. Would matter with hundreds of docs.
 - Chunks = `##` sections (FAQ questions, price tables). ~22 sections.
 - Compared variants on 27 queries (`eval/retrieval.py`): BM25 21/23 hit@3 vs plain word overlap 20/23, and 21 vs 16 at hit@1.
+- Numbers in this section are from the first comparison. Current ones (28 queries, after the "cancellation" fix) are in `eval/retrieval_results.md`: BM25 x2 22/24 hit@1 and hit@3, overlap 17/24 and 21/24. Same conclusions.
 - Hand-written BM25 (~15 lines). Rejected: `rank_bm25` (dependency, barely maintained), embeddings (overkill for 3 files).
 
 ### Crude stemming + stopwords

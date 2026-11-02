@@ -1,0 +1,75 @@
+# Held-out cases written by a separate AI agent that only saw data/ and the data README.
+# Current date/time for all cases: Wednesday 2026-06-10 09:00 Europe/Warsaw (+02:00).
+
+# CW-1007: confirmed, e-bike x1, start 2026-06-12 09:00, rental 36, fee 2, deposit 150, card.
+# Now 2026-06-10 09:00 -> exactly 48 h before start -> "48 hours or more" -> 100%.
+# Rental refund = 36 * 100% = 36 EUR (deposit 150 back too, booking fee 2 not refunded).
+# Boundary case: a wrong answer would apply 50% and say 18.
+[[case]]
+id = "refund-exactly-48h-boundary"
+question = "Hi, if I cancel CW-1007 right now, do I still get the full rental price back or is it too late for that?"
+tools_any = ["calculate_refund", "get_booking"]
+amounts = [36]
+must_contain = [["yes", "full"]]
+no_action_claim = true
+
+# CW-1004: confirmed, city x1 + child_seat, start 2026-06-20 09:00, rental 23, fee 2, deposit 50, voucher.
+# Now -> 240 h before start -> 100%. Rental refund = 23 EUR, as a new voucher (never money).
+# Deposit 50 also returned as voucher ("refunded the same way it was paid"). Booking fee 2 not refunded.
+[[case]]
+id = "voucher-booking-refund-to-card"
+question = "I paid for booking CW-1004 with a gift voucher. If I cancel it, can you send the money to my bank card instead?"
+tools_any = ["calculate_refund", "get_booking", "search_policies"]
+amounts = [23]
+must_contain = ["voucher"]
+no_action_claim = true
+
+# CW-1002: confirmed, e-bike x2, start 2026-06-11 18:00, rental 80, fee 2, deposit 300, card.
+# Now -> 33 h before start -> less than 48 h but >= 24 h -> 50%.
+# Rental refund = 80 * 50% = 40 EUR. (Deposit 300 back in full, booking fee 2 not refunded.)
+# The agent cannot cancel itself -> must not claim it did.
+[[case]]
+id = "pl-cancel-request-50pct"
+question = "Dzień dobry, proszę anulować moją rezerwację CW-1002. Ile wróci mi z ceny wypożyczenia?"
+tools = ["calculate_refund"]
+amounts = [40]
+no_action_claim = true
+language = "pl"
+
+# CW-1011 does not exist in bookings.json (ids go CW-1001..CW-1010).
+[[case]]
+id = "booking-not-found"
+question = "Could you check my booking CW-1011? I forgot what time I'm supposed to pick up the bikes."
+tools = ["get_booking"]
+statuses = { get_booking = "not_found" }
+
+# CW-1008: in_progress, city x1, end 2026-06-10 12:00. Returned 13:30 -> 1.5 h late -> 2 started hours.
+# City hourly price 4 EUR -> late rate 1.5 * 4 = 6 EUR per started hour.
+# Late fee = 2 * 6 = 12 EUR (taken from the deposit).
+[[case]]
+id = "late-return-fee"
+question = "I'm out on bike CW-1008 now and I'm running late - I think I'll get it back to you around 13:30 today. How much extra will that cost?"
+tools = ["calculate_late_fee"]
+amounts = [12]
+
+# 2 e-bikes for 3 hours (<= 6 h, so hourly): 9 EUR * 3 h = 27 per bike, * 2 bikes = 54 EUR rental.
+# Deposit: 150 per e-bike * 2 = 300 EUR. (Online booking would add a 2 EUR fee; not required here.)
+[[case]]
+id = "price-two-ebikes-three-hours"
+question = "How much would it be to rent two electric bikes for 3 hours, and how big is the deposit?"
+tools = ["quote_price"]
+amounts = [54, 300]
+
+# faq.md: "We do not take deposits in cash." Deposit by payment card or voucher; cash only for the rental in the shop.
+[[case]]
+id = "deposit-in-cash"
+question = "I don't have a credit card. Can I just leave the deposit in cash when I pick up the bike?"
+tools_any = ["search_policies"]
+must_contain = [["no", "not", "cannot", "can't"], ["card", "voucher"]]
+
+# No document mentions student (or any other) discounts except 15% for rentals of 7+ days.
+# Agent should say it's not covered and give the staff contact, not invent a discount.
+[[case]]
+id = "student-discount-not-covered"
+question = "Do you have a student discount? I have a valid student card."
+refuse = true

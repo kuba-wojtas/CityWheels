@@ -52,7 +52,9 @@ CLAIMED_ACTION = re.compile(
 )
 
 # Some models write typographic apostrophes and hyphens ("couldn’t", "CW‑1002").
-TYPOGRAPHY = str.maketrans({"’": "'", "‘": "'", "‐": "-", "‑": "-", "–": "-"})
+TYPOGRAPHY = str.maketrans(
+    {"\u2019": "'", "\u2018": "'", "\u2010": "-", "\u2011": "-", "\u2013": "-"}
+)
 
 
 def to_number(text: str) -> float:

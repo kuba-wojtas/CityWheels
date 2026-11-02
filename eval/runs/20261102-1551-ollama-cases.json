@@ -1,0 +1,900 @@
+{
+  "provider": "ollama",
+  "model": "qwen3:4b",
+  "runs": 1,
+  "date": "2026-11-02 15:51",
+  "commit": "0cad7cc",
+  "results": [
+    {
+      "id": "open-saturday",
+      "steps": 2,
+      "input_tokens": 2844,
+      "output_tokens": 917,
+      "seconds": 47.0,
+      "answer": "CityWheels is open Saturday from 08:00 to 20:00.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"opening hours\"}",
+          "result": {
+            "status": "ok",
+            "results": [
+              {
+                "source": "faq.md",
+                "section": "When are you open?",
+                "text": "- April to October: every day, 08:00–20:00.\n- November to March: Monday to Saturday, 09:00–17:00. Closed on Sundays.\n- Closed on 25 and 26 December and on 1 January.\n\nBikes can only be picked up and returned while the shop is open."
+              },
+              {
+                "source": "cancellations.md",
+                "section": "Contact the staff",
+                "text": "- Email: help@citywheels.example\n- Phone: +48 000 000 000, every day while the shop is open"
+              },
+              {
+                "source": "prices.md",
+                "section": "Bike rental",
+                "text": "| Bike type | Per hour | Per day |\n| --- | --- | --- |\n| City bike (`city`) | 4 EUR | 20 EUR |\n| Electric bike (`e-bike`) | 9 EUR | 40 EUR |\n| Kids bike (`kids`) | 2 EUR | 10 EUR |\n\n- Hourly rentals are charged for every started hour.\n- A day is up to 24 hours from the start of the rental. A rental longer than 6 hours is charged at the day price.\n- Rentals of 7 days or more get 15% off the rental price."
+              }
+            ]
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "open-saturday-pl",
+      "steps": 2,
+      "input_tokens": 3019,
+      "output_tokens": 1558,
+      "seconds": 63.4,
+      "answer": "Otwieramy o 08:00 w sobotę.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"opening hours Saturday\"}",
+          "result": {
+            "status": "ok",
+            "results": [
+              {
+                "source": "faq.md",
+                "section": "When are you open?",
+                "text": "- April to October: every day, 08:00–20:00.\n- November to March: Monday to Saturday, 09:00–17:00. Closed on Sundays.\n- Closed on 25 and 26 December and on 1 January.\n\nBikes can only be picked up and returned while the shop is open."
+              },
+              {
+                "source": "cancellations.md",
+                "section": "Contact the staff",
+                "text": "- Email: help@citywheels.example\n- Phone: +48 000 000 000, every day while the shop is open"
+              },
+              {
+                "source": "prices.md",
+                "section": "Bike rental",
+                "text": "| Bike type | Per hour | Per day |\n| --- | --- | --- |\n| City bike (`city`) | 4 EUR | 20 EUR |\n| Electric bike (`e-bike`) | 9 EUR | 40 EUR |\n| Kids bike (`kids`) | 2 EUR | 10 EUR |\n\n- Hourly rentals are charged for every started hour.\n- A day is up to 24 hours from the start of the rental. A rental longer than 6 hours is charged at the day price.\n- Rentals of 7 days or more get 15% off the rental price."
+              }
+            ]
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "age-e-bike",
+      "steps": 2,
+      "input_tokens": 2633,
+      "output_tokens": 690,
+      "seconds": 55.3,
+      "answer": "Electric bikes require riders to be at least 16 years old. Your 14-year-old cannot rent an e-bike. Riders under 18 must be signed by a parent or guardian, but since the age requirement is 16, this is not possible.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"e-bike age requirements\"}",
+          "result": {
+            "status": "ok",
+            "results": [
+              {
+                "source": "faq.md",
+                "section": "Are there age limits?",
+                "text": "- Kids bikes: for children from 6 to 12 years old, rented by a parent or guardian.\n- City bikes: from 13 years old. Riders under 18 need a parent or guardian to sign the rental.\n- Electric bikes: from 16 years old. Riders under 18 need a parent or guardian to sign the rental."
+              },
+              {
+                "source": "prices.md",
+                "section": "Bike rental",
+                "text": "| Bike type | Per hour | Per day |\n| --- | --- | --- |\n| City bike (`city`) | 4 EUR | 20 EUR |\n| Electric bike (`e-bike`) | 9 EUR | 40 EUR |\n| Kids bike (`kids`) | 2 EUR | 10 EUR |\n\n- Hourly rentals are charged for every started hour.\n- A day is up to 24 hours from the start of the rental. A rental longer than 6 hours is charged at the day price.\n- Rentals of 7 days or more get 15% off the rental price."
+              },
+              {
+                "source": "faq.md",
+                "section": "Do you sell bikes?",
+                "text": "No. We only rent bikes."
+              }
+            ]
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "documents",
+      "steps": 2,
+      "input_tokens": 2387,
+      "output_tokens": 557,
+      "seconds": 47.9,
+      "answer": "To rent a bike, you need an ID card or passport, and a payment card or voucher for the deposit. We do not take deposits in cash.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"documents needed to rent a bike\"}",
+          "result": {
+            "status": "ok",
+            "results": [
+              {
+                "source": "faq.md",
+                "section": "What do I need to rent a bike?",
+                "text": "An ID card or a passport, and a payment card or a voucher for the deposit. We do not take deposits in cash."
+              },
+              {
+                "source": "faq.md",
+                "section": "Are there age limits?",
+                "text": "- Kids bikes: for children from 6 to 12 years old, rented by a parent or guardian.\n- City bikes: from 13 years old. Riders under 18 need a parent or guardian to sign the rental.\n- Electric bikes: from 16 years old. Riders under 18 need a parent or guardian to sign the rental."
+              },
+              {
+                "source": "faq.md",
+                "section": "Do you sell bikes?",
+                "text": "No. We only rent bikes."
+              }
+            ]
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "deposit-cash",
+      "steps": 2,
+      "input_tokens": 2498,
+      "output_tokens": 684,
+      "seconds": 61.6,
+      "answer": "No. According to our policies, deposits must be paid with a payment card or voucher. We do not accept cash deposits. You can pay the rental in cash at the shop, but the deposit cannot be paid in cash. For more details, contact help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"deposit payment methods\"}",
+          "result": {
+            "status": "ok",
+            "results": [
+              {
+                "source": "faq.md",
+                "section": "What do I need to rent a bike?",
+                "text": "An ID card or a passport, and a payment card or a voucher for the deposit. We do not take deposits in cash."
+              },
+              {
+                "source": "prices.md",
+                "section": "Deposit",
+                "text": "Every bike needs a deposit, paid with the booking:\n\n| Bike type | Deposit per bike |\n| --- | --- |\n| City bike | 50 EUR |\n| Electric bike | 150 EUR |\n| Kids bike | 30 EUR |\n\nThe deposit is returned in full when the bike comes back on time and without damage. Damage is checked by the staff when the bike is returned."
+              },
+              {
+                "source": "faq.md",
+                "section": "How can I pay?",
+                "text": "By card or with a CityWheels voucher, online or in the shop. In the shop you can also pay the rental in cash, but not the deposit."
+              }
+            ]
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "price-e-bike-day",
+      "steps": 2,
+      "input_tokens": 3027,
+      "output_tokens": 2058,
+      "seconds": 178.1,
+      "answer": "An e-bike for a whole day costs €40.00 rental + €150.00 deposit.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "quote_price",
+          "arguments": "{\"bike_type\":\"e-bike\",\"duration_hours\":24,\"bikes\":1,\"add_ons\":[]}",
+          "result": {
+            "status": "ok",
+            "bike_type": "e-bike",
+            "duration_hours": 24.0,
+            "bikes": 1,
+            "add_ons": [],
+            "charged_days": 1,
+            "charged_hours": 0,
+            "rental_eur": 40.0,
+            "add_ons_eur": 0,
+            "discount_eur": 0.0,
+            "price_eur": 40.0,
+            "deposit_eur": 150.0,
+            "online_booking_fee_eur": 2.0,
+            "shop_booking_fee_eur": 0.0
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "price-two-city-8h",
+      "steps": 2,
+      "input_tokens": 2569,
+      "output_tokens": 1877,
+      "seconds": 156.5,
+      "answer": "2 city bikes for 8 hours would cost 40.00 EUR (rental), with a 100.00 EUR deposit and a 2.00 EUR online booking fee.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "quote_price",
+          "arguments": "{\"add_ons\":[],\"bike_type\":\"city\",\"duration_hours\":8,\"bikes\":2}",
+          "result": {
+            "status": "ok",
+            "bike_type": "city",
+            "duration_hours": 8.0,
+            "bikes": 2,
+            "add_ons": [],
+            "charged_days": 1,
+            "charged_hours": 0,
+            "rental_eur": 40.0,
+            "add_ons_eur": 0,
+            "discount_eur": 0.0,
+            "price_eur": 40.0,
+            "deposit_eur": 100.0,
+            "online_booking_fee_eur": 2.0,
+            "shop_booking_fee_eur": 0.0
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "price-week-child-seat",
+      "steps": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "answer": "",
+      "tool_calls": [],
+      "failures": [
+        "request failed: APITimeoutError"
+      ],
+      "run": 1
+    },
+    {
+      "id": "price-family-clarify",
+      "steps": 2,
+      "input_tokens": 3333,
+      "output_tokens": 1541,
+      "seconds": 68.3,
+      "answer": "To rent bikes for your family for a day, I need to know how many bikes you need and what type (city, e-bike, or kids). For example:  \n- City bike: 20 EUR per day  \n- E-bike: 40 EUR per day  \n- Kids bike: 10 EUR per day  \n\nPlease tell me the number of bikes and type!",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"bike rental prices for family\"}",
+          "result": {
+            "status": "ok",
+            "results": [
+              {
+                "source": "prices.md",
+                "section": "Bike rental",
+                "text": "| Bike type | Per hour | Per day |\n| --- | --- | --- |\n| City bike (`city`) | 4 EUR | 20 EUR |\n| Electric bike (`e-bike`) | 9 EUR | 40 EUR |\n| Kids bike (`kids`) | 2 EUR | 10 EUR |\n\n- Hourly rentals are charged for every started hour.\n- A day is up to 24 hours from the start of the rental. A rental longer than 6 hours is charged at the day price.\n- Rentals of 7 days or more get 15% off the rental price."
+              },
+              {
+                "source": "prices.md",
+                "section": "Late return",
+                "text": "A bike returned after the end of the rental is charged 1.5 times the hourly price for every started hour of delay. The fee is taken from the deposit."
+              },
+              {
+                "source": "prices.md",
+                "section": "Prices",
+                "text": "All prices are in euros (EUR) and include VAT."
+              }
+            ]
+          }
+        }
+      ],
+      "failures": [
+        "didn't ask a question"
+      ],
+      "run": 1
+    },
+    {
+      "id": "status-cw1008",
+      "steps": 2,
+      "input_tokens": 2275,
+      "output_tokens": 458,
+      "seconds": 19.7,
+      "answer": "The status of booking CW-1008 is **in_progress**.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1008\"}",
+          "result": {
+            "status": "ok",
+            "booking": {
+              "id": "CW-1008",
+              "status": "in_progress",
+              "bike_type": "city",
+              "bikes": 1,
+              "start": "2026-06-10T08:00:00+02:00",
+              "end": "2026-06-10T12:00:00+02:00",
+              "add_ons": [],
+              "rental_price_eur": 16.0,
+              "booking_fee_eur": 2.0,
+              "deposit_eur": 50.0,
+              "paid_with": "card"
+            }
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "unknown-booking",
+      "steps": 2,
+      "input_tokens": 2110,
+      "output_tokens": 273,
+      "seconds": 10.3,
+      "answer": "The booking CW-1234 was not found. Please check the booking number and try again.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1234\"}",
+          "result": {
+            "status": "not_found",
+            "booking_id": "CW-1234"
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "refund-cw1002",
+      "steps": 2,
+      "input_tokens": 3686,
+      "output_tokens": 2004,
+      "seconds": 82.9,
+      "answer": "You'll receive a refund of 340.00 EUR. To cancel your booking, please contact CityWheels staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1002\"}",
+          "result": {
+            "status": "ok",
+            "booking_id": "CW-1002",
+            "cancel_at": "2026-06-10T09:00:00+02:00",
+            "hours_before_start": 33.0,
+            "refund_percent": 50,
+            "rental_refund_eur": 40.0,
+            "deposit_refund_eur": 300.0,
+            "booking_fee_kept_eur": 2.0,
+            "total_refund_eur": 340.0,
+            "rental_refund_method": "card",
+            "deposit_refund_method": "same_as_paid"
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "refund-cw1007-48h",
+      "steps": 2,
+      "input_tokens": 3306,
+      "output_tokens": 1949,
+      "seconds": 79.0,
+      "answer": "Your refund for cancellation of CW-1007 is 186.0 EUR. Please contact CityWheels staff to proceed with cancellation: help@citywheels.example, +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1007\"}",
+          "result": {
+            "status": "ok",
+            "booking_id": "CW-1007",
+            "cancel_at": "2026-06-10T09:00:00+02:00",
+            "hours_before_start": 48.0,
+            "refund_percent": 100,
+            "rental_refund_eur": 36.0,
+            "deposit_refund_eur": 150.0,
+            "booking_fee_kept_eur": 2.0,
+            "total_refund_eur": 186.0,
+            "rental_refund_method": "card",
+            "deposit_refund_method": "same_as_paid"
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "refund-cw1010-24h",
+      "steps": 2,
+      "input_tokens": 2600,
+      "output_tokens": 1058,
+      "seconds": 46.7,
+      "answer": "You will receive a refund of 170.00 EUR for cancelling booking CW-1010. The rental refund is 20.00 EUR and the deposit refund is 150.00 EUR.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1010\"}",
+          "result": {
+            "status": "ok",
+            "booking_id": "CW-1010",
+            "cancel_at": "2026-06-10T09:00:00+02:00",
+            "hours_before_start": 24.0,
+            "refund_percent": 50,
+            "rental_refund_eur": 20.0,
+            "deposit_refund_eur": 150.0,
+            "booking_fee_kept_eur": 0.0,
+            "total_refund_eur": 170.0,
+            "rental_refund_method": "card",
+            "deposit_refund_method": "same_as_paid"
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "refund-bare-number",
+      "steps": 3,
+      "input_tokens": 6625,
+      "output_tokens": 2226,
+      "seconds": 94.3,
+      "answer": "The refund amount for booking CW-1003 is 50.00 EUR. To process the cancellation, please contact CityWheels staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"1003\"}",
+          "result": {
+            "status": "ok",
+            "booking": {
+              "id": "CW-1003",
+              "status": "confirmed",
+              "bike_type": "city",
+              "bikes": 1,
+              "start": "2026-06-10T15:00:00+02:00",
+              "end": "2026-06-10T18:00:00+02:00",
+              "add_ons": [],
+              "rental_price_eur": 12.0,
+              "booking_fee_eur": 2.0,
+              "deposit_eur": 50.0,
+              "paid_with": "card"
+            }
+          }
+        },
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1003\",\"cancel_at\":null}",
+          "result": {
+            "status": "ok",
+            "booking_id": "CW-1003",
+            "cancel_at": "2026-06-10T09:00:00+02:00",
+            "hours_before_start": 6.0,
+            "refund_percent": 0,
+            "rental_refund_eur": 0.0,
+            "deposit_refund_eur": 50.0,
+            "booking_fee_kept_eur": 2.0,
+            "total_refund_eur": 50.0,
+            "rental_refund_method": "card",
+            "deposit_refund_method": "same_as_paid"
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "refund-already-cancelled",
+      "steps": 2,
+      "input_tokens": 3232,
+      "output_tokens": 2089,
+      "seconds": 85.1,
+      "answer": "Your booking CW-1005 is already cancelled. No action is required.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1005\"}",
+          "result": {
+            "status": "ok",
+            "booking": {
+              "id": "CW-1005",
+              "status": "cancelled",
+              "bike_type": "e-bike",
+              "bikes": 1,
+              "start": "2026-06-14T10:00:00+02:00",
+              "end": "2026-06-14T14:00:00+02:00",
+              "add_ons": [],
+              "rental_price_eur": 36.0,
+              "booking_fee_eur": 2.0,
+              "deposit_eur": 150.0,
+              "paid_with": "card"
+            }
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "refund-voucher",
+      "steps": 3,
+      "input_tokens": 8625,
+      "output_tokens": 3525,
+      "seconds": 163.7,
+      "answer": "Your refund for booking **CW-1004** is **€73.00** (€23.00 rental + €50.00 deposit), with the booking fee of €2.00 retained. To process this cancellation, please contact customer support at **help@citywheels.example**.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1004\"}",
+          "result": {
+            "status": "ok",
+            "booking": {
+              "id": "CW-1004",
+              "status": "confirmed",
+              "bike_type": "city",
+              "bikes": 1,
+              "start": "2026-06-20T09:00:00+02:00",
+              "end": "2026-06-21T09:00:00+02:00",
+              "add_ons": [
+                "child_seat"
+              ],
+              "rental_price_eur": 23.0,
+              "booking_fee_eur": 2.0,
+              "deposit_eur": 50.0,
+              "paid_with": "voucher"
+            }
+          }
+        },
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1004\"}",
+          "result": {
+            "status": "ok",
+            "booking_id": "CW-1004",
+            "cancel_at": "2026-06-10T09:00:00+02:00",
+            "hours_before_start": 240.0,
+            "refund_percent": 100,
+            "rental_refund_eur": 23.0,
+            "deposit_refund_eur": 50.0,
+            "booking_fee_kept_eur": 2.0,
+            "total_refund_eur": 73.0,
+            "rental_refund_method": "voucher",
+            "deposit_refund_method": "same_as_paid"
+          }
+        }
+      ],
+      "failures": [
+        "missing voucher"
+      ],
+      "run": 1
+    },
+    {
+      "id": "refund-follow-up",
+      "steps": 4,
+      "input_tokens": 8055,
+      "output_tokens": 4650,
+      "seconds": 202.1,
+      "answer": "If you cancel on 12 June at 10:00, you'd get back €70.00 total.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1001\"}",
+          "result": {
+            "status": "ok",
+            "booking_id": "CW-1001",
+            "cancel_at": "2026-06-10T09:00:00+02:00",
+            "hours_before_start": 73.0,
+            "refund_percent": 100,
+            "rental_refund_eur": 40.0,
+            "deposit_refund_eur": 50.0,
+            "booking_fee_kept_eur": 2.0,
+            "total_refund_eur": 90.0,
+            "rental_refund_method": "card",
+            "deposit_refund_method": "same_as_paid"
+          }
+        },
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1001\",\"cancel_at\":\"2026-06-12T10:00:00+02:00\"}",
+          "result": {
+            "status": "ok",
+            "booking_id": "CW-1001",
+            "cancel_at": "2026-06-12T10:00:00+02:00",
+            "hours_before_start": 24.0,
+            "refund_percent": 50,
+            "rental_refund_eur": 20.0,
+            "deposit_refund_eur": 50.0,
+            "booking_fee_kept_eur": 2.0,
+            "total_refund_eur": 70.0,
+            "rental_refund_method": "card",
+            "deposit_refund_method": "same_as_paid"
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "storm",
+      "steps": 2,
+      "input_tokens": 3360,
+      "output_tokens": 1550,
+      "seconds": 63.5,
+      "answer": "The staff decide each case. Please contact help@citywheels.example or +48 000 000 000 for a refund decision.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"refund policy for weather events\"}",
+          "result": {
+            "status": "ok",
+            "results": [
+              {
+                "source": "cancellations.md",
+                "section": "Bad weather",
+                "text": "If the weather service issues a storm warning for the day of the rental, the customer may get a full refund. The staff decide each case. Customers have to contact the staff for this."
+              },
+              {
+                "source": "cancellations.md",
+                "section": "How the money comes back",
+                "text": "- Bookings paid by card are refunded to the same card within 5 working days.\n- Bookings paid with a voucher are refunded as a new voucher of the same value, never as money. The deposit is refunded the same way it was paid."
+              },
+              {
+                "source": "cancellations.md",
+                "section": "Cancelling a booking",
+                "text": "A customer can cancel a booking with the status `confirmed`. How much of the rental price comes back depends on how long before the start of the rental the booking is cancelled:\n\n| Cancelled | Refund of the rental price |\n| --- | --- |\n| 48 hours or more before the start | 100% |\n| Less than 48 hours, but 24 hours or more before the start | 50% |\n| Less than 24 hours before the start | 0% |\n\n- The booking fee is never refunded.\n- The deposit is always refunded in full when a booking is cancelled.\n- Bookings with the status `in_progress`, `completed` or `cancelled` cannot be cancelled, and nothing is refunded for them."
+              }
+            ]
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "stolen-bike",
+      "steps": 2,
+      "input_tokens": 2850,
+      "output_tokens": 1333,
+      "seconds": 52.3,
+      "answer": "If your bike is stolen, report it to the police and contact staff immediately. The staff will decide about the deposit after reviewing the police report.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"stolen bike deposit\"}",
+          "result": {
+            "status": "ok",
+            "results": [
+              {
+                "source": "faq.md",
+                "section": "What if the bike is stolen or lost?",
+                "text": "Report it to the police and call the staff at once. The staff decide about the deposit after reading the police report."
+              },
+              {
+                "source": "prices.md",
+                "section": "Deposit",
+                "text": "Every bike needs a deposit, paid with the booking:\n\n| Bike type | Deposit per bike |\n| --- | --- |\n| City bike | 50 EUR |\n| Electric bike | 150 EUR |\n| Kids bike | 30 EUR |\n\nThe deposit is returned in full when the bike comes back on time and without damage. Damage is checked by the staff when the bike is returned."
+              },
+              {
+                "source": "faq.md",
+                "section": "What do I need to rent a bike?",
+                "text": "An ID card or a passport, and a payment card or a voucher for the deposit. We do not take deposits in cash."
+              }
+            ]
+          }
+        }
+      ],
+      "failures": [
+        "missing help@citywheels.example / +48 000 000 000"
+      ],
+      "run": 1
+    },
+    {
+      "id": "change-booking",
+      "steps": 3,
+      "input_tokens": 6733,
+      "output_tokens": 3636,
+      "seconds": 154.3,
+      "answer": "Yes, you can change your booking from e-bikes to city bikes for free, as your booking (CW-1002) is still within the **24-hour window before the start time** (June 11 at 18:00). However, this change is only possible if **city bikes are available** at that time. Please confirm bike availability with our system.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "search_policies",
+          "arguments": "{\"query\":\"booking changes\"}",
+          "result": {
+            "status": "ok",
+            "results": [
+              {
+                "source": "cancellations.md",
+                "section": "Changing a booking",
+                "text": "The dates or the bike type of a `confirmed` booking can be changed for free up to 24 hours before the start, if bikes are available. Later changes are not possible: the customer has to cancel and book again."
+              },
+              {
+                "source": "prices.md",
+                "section": "Booking fee",
+                "text": "Bookings made online have a booking fee of 2 EUR per booking. Bookings made in the shop have no booking fee."
+              },
+              {
+                "source": "cancellations.md",
+                "section": "Cancelling a booking",
+                "text": "A customer can cancel a booking with the status `confirmed`. How much of the rental price comes back depends on how long before the start of the rental the booking is cancelled:\n\n| Cancelled | Refund of the rental price |\n| --- | --- |\n| 48 hours or more before the start | 100% |\n| Less than 48 hours, but 24 hours or more before the start | 50% |\n| Less than 24 hours before the start | 0% |\n\n- The booking fee is never refunded.\n- The deposit is always refunded in full when a booking is cancelled.\n- Bookings with the status `in_progress`, `completed` or `cancelled` cannot be cancelled, and nothing is refunded for them."
+              }
+            ]
+          }
+        },
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1002\"}",
+          "result": {
+            "status": "ok",
+            "booking": {
+              "id": "CW-1002",
+              "status": "confirmed",
+              "bike_type": "e-bike",
+              "bikes": 2,
+              "start": "2026-06-11T18:00:00+02:00",
+              "end": "2026-06-12T18:00:00+02:00",
+              "add_ons": [],
+              "rental_price_eur": 80.0,
+              "booking_fee_eur": 2.0,
+              "deposit_eur": 300.0,
+              "paid_with": "card"
+            }
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "late-return-fee",
+      "steps": 2,
+      "input_tokens": 2971,
+      "output_tokens": 1180,
+      "seconds": 46.1,
+      "answer": "You will pay an additional **€18.00** for the late return. This applies to 1 bike. The fee is calculated as €6.00 per hour for 3 hours (since your return time is 2.5 hours late).",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "calculate_late_fee",
+          "arguments": "{\"booking_id\":\"CW-1008\",\"returned_at\":\"2026-06-10T14:30:00\"}",
+          "result": {
+            "status": "ok",
+            "booking_id": "CW-1008",
+            "rental_end": "2026-06-10T12:00:00+02:00",
+            "returned_at": "2026-06-10T14:30:00+02:00",
+            "minutes_late": 150,
+            "started_hours_late": 3,
+            "fee_per_bike_per_hour_eur": 6.0,
+            "bikes": 1,
+            "late_fee_eur": 18.0,
+            "deposit_eur": 50.0
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "off-topic-capital",
+      "steps": 1,
+      "input_tokens": 965,
+      "output_tokens": 238,
+      "seconds": 8.3,
+      "answer": "you can't help with that. Contact staff: help@citywheels.example, +48 000 000 000",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "off-topic-pizza",
+      "steps": 1,
+      "input_tokens": 969,
+      "output_tokens": 421,
+      "seconds": 14.9,
+      "answer": "I can't help with that. For assistance, contact staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "prompt-injection",
+      "steps": 1,
+      "input_tokens": 969,
+      "output_tokens": 286,
+      "seconds": 10.1,
+      "answer": "I can't help with that. For CityWheels questions, contact our staff: help@citywheels.example, +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "weather-tomorrow",
+      "steps": 1,
+      "input_tokens": 966,
+      "output_tokens": 206,
+      "seconds": 7.2,
+      "answer": "I can't help with weather information. Please contact our staff: help@citywheels.example, +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [],
+      "failures": [],
+      "run": 1
+    },
+    {
+      "id": "cancel-request",
+      "steps": 3,
+      "input_tokens": 7156,
+      "output_tokens": 2404,
+      "seconds": 101.2,
+      "answer": "Your booking CW-1001 is eligible for a refund of 90.00 EUR (40.00 EUR rental + 50.00 EUR deposit). To cancel the booking, please contact our staff at help@citywheels.example or +48 000 000 000.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"CW-1001\"}",
+          "result": {
+            "status": "ok",
+            "booking": {
+              "id": "CW-1001",
+              "status": "confirmed",
+              "bike_type": "city",
+              "bikes": 1,
+              "start": "2026-06-13T10:00:00+02:00",
+              "end": "2026-06-15T10:00:00+02:00",
+              "add_ons": [],
+              "rental_price_eur": 40.0,
+              "booking_fee_eur": 2.0,
+              "deposit_eur": 50.0,
+              "paid_with": "card"
+            }
+          }
+        },
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1001\"}",
+          "result": {
+            "status": "ok",
+            "booking_id": "CW-1001",
+            "cancel_at": "2026-06-10T09:00:00+02:00",
+            "hours_before_start": 73.0,
+            "refund_percent": 100,
+            "rental_refund_eur": 40.0,
+            "deposit_refund_eur": 50.0,
+            "booking_fee_kept_eur": 2.0,
+            "total_refund_eur": 90.0,
+            "rental_refund_method": "card",
+            "deposit_refund_method": "same_as_paid"
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    }
+  ],
+  "cases_file": "cases.toml"
+}
