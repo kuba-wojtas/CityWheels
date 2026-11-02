@@ -23,8 +23,9 @@ from citywheels.llm import make_client, resolve_provider
 EVAL_DIR = Path(__file__).parent
 STAFF_CONTACT = ("help@citywheels.example", "+48 000 000 000")
 
-# Seconds to wait per model request, to stay under each free tier's requests per minute.
-PACE = {"gemini": 4.5, "groq": 2.0, "ollama": 0.0}
+# Seconds to wait per model request, to stay under each free tier's limits.
+# Gemini Flash-Lite: 15 requests/min. Groq: 8000 tokens/min, one request is ~1200 tokens.
+PACE = {"gemini": 4.5, "groq": 10.0, "ollama": 0.0}
 
 AMOUNT = re.compile(
     r"(?:€|\beur\b)\s*(\d+(?:[.,]\d{1,2})?)|(\d+(?:[.,]\d{1,2})?)\s*(?:€|\beur\b|\beuros?\b)",

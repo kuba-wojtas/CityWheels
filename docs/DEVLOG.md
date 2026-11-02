@@ -113,6 +113,13 @@
 - Not reading this as "done": `open-saturday` failed 1/7 runs since the fix (in the hung run). Cases written by me, the 4 baseline fails were fixed on purpose. Checks are lenient (substring, contact = refusal, any number from tools = supported).
 - Next: Groq + Ollama on the same cases for a real spread.
 
+### GROQ + OLLAMA SETUP
+- Smoke test: both call `get_booking` and answer. Groq 1.6 s total, Ollama 55 s (incl. loading the model).
+- Groq writes "CW‑1002" with a non-breaking hyphen (U+2011). No eval check looks for booking numbers, but worth knowing.
+- Groq limits (from response headers): 1000 requests/day, 8000 tokens/min. One request ~1200 tokens -> ~6/min -> pace 10 s.
+- Ollama `qwen3:4b`, refund question: thinking on (default) 123 s, correct. `reasoning_effort="none"` (fix suggested in a GitHub issue) 299 s, more tokens, and the reasoning leaked into the answer ("Okay, let me process this step by step..."). Kept the default.
+- ~2 min per question -> Ollama gets 1 eval run (~1 h), not 3. Gemini and Groq 3 runs.
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
 - Claude suggested GitHub Models from memory (the task description lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: double check provider docs before writing config.
