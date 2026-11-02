@@ -1,3 +1,4 @@
+import math
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
 
@@ -41,7 +42,8 @@ def compute_refund(booking: Booking, cancel_at: datetime) -> RefundQuote:
     # Float is fine here: all prices are whole or half euros, round() keeps cents clean.
     rental_refund = round(booking.rental_price_eur * percent / 100, 2)
     return RefundQuote(
-        hours_before_start=round(time_before_start.total_seconds() / 3600, 1),
+        # Rounded down, so 47h59m shows 47.9 and not 48.0 next to a 50% refund.
+        hours_before_start=math.floor(time_before_start.total_seconds() / 360) / 10,
         refund_percent=percent,
         rental_refund_eur=rental_refund,
         deposit_refund_eur=booking.deposit_eur,

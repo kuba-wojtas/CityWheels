@@ -1,7 +1,7 @@
 """Run the agent on eval/cases.toml.
 
 Run:    uv run python eval/run_eval.py [--provider gemini] [--model ...] [--runs 3]
-        Saves eval/runs/<time>-<provider>.json and a report next to it (.md).
+        Saves eval/runs/<time>-<provider>-<cases file>.json and a report next to it (.md).
 Report: uv run python eval/run_eval.py --report eval/runs/<file>.json [more files...] [--recheck]
         Writes the combined eval/results.md.
 """
@@ -249,15 +249,17 @@ def main():
     parser.add_argument("--provider")
     parser.add_argument("--model")
     parser.add_argument("--runs", type=int, default=3)
-    parser.add_argument("--cases", type=Path, default=EVAL_DIR / "cases.toml")
+    parser.add_argument("--cases", type=Path, help="default: cases.toml, or the file the runs used")
     parser.add_argument("--only", nargs="+", help="case ids to run")
     parser.add_argument("--report", nargs="+", type=Path, help="write results.md from runs")
     parser.add_argument("--recheck", action="store_true", help="score saved answers again")
     args = parser.parse_args()
 
-    cases = tomllib.loads(args.cases.read_text())["case"]
     if args.report:
         runs = [json.loads(path.read_text()) for path in args.report]
+        # A report on held-out runs needs holdout.toml, which each run records.
+        args.cases = args.cases or EVAL_DIR / runs[0].get("cases_file", "cases.toml")
+        cases = tomllib.loads(args.cases.read_text())["case"]
         if args.recheck:
             for run in runs:
                 recheck(run, cases)
@@ -265,6 +267,8 @@ def main():
         (EVAL_DIR / "results.md").write_text(report)
         return
 
+    args.cases = args.cases or EVAL_DIR / "cases.toml"
+    cases = tomllib.loads(args.cases.read_text())["case"]
     load_dotenv(find_dotenv(usecwd=True))
     provider = resolve_provider(args.provider)
     client, model = make_client(provider, args.model)

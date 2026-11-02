@@ -44,6 +44,7 @@ def test_one_minute_past_boundary_drops_a_tier(booking_id, percent):
     result = calculate_refund(booking_id, cancel_at="2026-06-10T09:01:00+02:00")
 
     assert result["refund_percent"] == percent
+    assert result["hours_before_start"] < (48 if percent == 50 else 24)
 
 
 @pytest.mark.parametrize(

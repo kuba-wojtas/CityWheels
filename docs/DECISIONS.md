@@ -61,7 +61,7 @@
 ### Model comparison on the same prompt
 - Gemini, Groq and Ollama run the same prompt, tools and cases. No per-model prompt tuning.
 - Point of the comparison: how much depends on the model. Groq results show a prompt tuned on one model doesn't carry over.
-- Ollama gets 1 run instead of 3 (~2 min per question on 8 GB RAM) -> no stability numbers for it.
+- Ollama gets 1 run instead of 3 (~1 min per question on 8 GB RAM, median 62.5 s in the final run) -> no stability numbers for it.
 
 ### Changed after the external review
 Two reviews with no project context (a fresh Claude agent and Codex), read-only. Changes:
