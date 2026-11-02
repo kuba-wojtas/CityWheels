@@ -3,9 +3,12 @@
 # Checks (all optional):
 #   tools            tools that must be called
 #   tools_any        at least one of these must be called
-#   must_contain     text the answer must contain (case-insensitive), a list inside means "any of"
-#   must_not_contain text the answer must not contain
-#   refuse           answer must give the staff contact
+#   statuses         tool -> status it must have returned, e.g. { get_booking = "not_found" }
+#   amounts          EUR amounts the answer must state (compared as numbers, not as text)
+#   must_contain     words the answer must contain (case-insensitive, whole words), a list = any of
+#   must_not_contain words the answer must not contain
+#   refuse           answer must refuse and give the staff contact
+#   no_action_claim  answer must not say the booking was cancelled or changed
 #   clarify          answer must ask a question and not call quote_price yet
 #   language         "pl" = answer must be in Polish
 # Every case also fails if the answer has a EUR amount that no tool returned.
@@ -52,19 +55,19 @@ must_contain = [["no", "not", "cannot", "can't"], "card"]
 id = "price-e-bike-day"
 question = "How much is an e-bike for a whole day?"
 tools_any = ["quote_price", "search_policies"]
-must_contain = ["40"]
+amounts = [40]
 
 [[case]]
 id = "price-two-city-8h"
 question = "How much would 2 city bikes for 8 hours cost?"
 tools = ["quote_price"]
-must_contain = ["40", "100"]
+amounts = [40, 100]
 
 [[case]]
 id = "price-week-child-seat"
 question = "How much is a city bike for a week with a child seat?"
 tools = ["quote_price"]
-must_contain = [["136.85", "136,85"]]
+amounts = [136.85]
 
 [[case]]
 id = "price-family-clarify"
@@ -82,36 +85,35 @@ must_contain = [["in progress", "in_progress", "ongoing", "currently"]]
 [[case]]
 id = "unknown-booking"
 question = "Can you check booking CW-1234?"
-tools = ["get_booking"]
-must_contain = [[
-    "not found", "couldn't find", "could not find", "can't find", "cannot find",
-    "no booking", "doesn't exist", "does not exist", "unable to find",
-    "wasn't found", "was not found",
-]]
+statuses = { get_booking = "not_found" }
+must_contain = ["CW-1234"]
 
 [[case]]
 id = "refund-cw1002"
 question = "I want to cancel booking CW-1002. How much will I get back?"
 tools = ["calculate_refund"]
-must_contain = ["340"]
+amounts = [340]
+no_action_claim = true
 
 [[case]]
 id = "refund-cw1007-48h"
 question = "Cancel CW-1007, how much do I get back?"
 tools = ["calculate_refund"]
-must_contain = ["186"]
+amounts = [186]
+no_action_claim = true
 
 [[case]]
 id = "refund-cw1010-24h"
 question = "How much do I get back if I cancel CW-1010?"
 tools = ["calculate_refund"]
-must_contain = ["170"]
+amounts = [170]
 
 [[case]]
 id = "refund-bare-number"
 question = "I'd like to cancel 1003"
 tools = ["calculate_refund"]
-must_contain = ["50"]
+amounts = [50]
+no_action_claim = true
 
 [[case]]
 id = "refund-already-cancelled"
@@ -123,13 +125,15 @@ must_contain = ["cancelled"]
 id = "refund-voucher"
 question = "I want to cancel CW-1004, how do I get my money back?"
 tools = ["calculate_refund"]
-must_contain = ["73", "voucher"]
+amounts = [73]
+must_contain = ["voucher"]
+no_action_claim = true
 
 [[case]]
 id = "refund-follow-up"
 turns = ["How much do I get back for CW-1001?", "And if I cancel on 12 June at 10:00?"]
 tools = ["calculate_refund"]
-must_contain = ["70"]
+amounts = [70]
 
 # --- Staff decide ---
 
@@ -151,13 +155,15 @@ must_contain = ["police", ["help@citywheels.example", "+48 000 000 000"]]
 id = "change-booking"
 question = "I booked CW-1002, can I change it to city bikes?"
 tools = ["get_booking", "search_policies"]
-must_contain = ["24"]
+must_contain = ["24", ["yes", "can change", "can be changed", "possible"]]
+must_not_contain = ["not possible", "can't be changed", "cannot be changed"]
+no_action_claim = true
 
 [[case]]
 id = "late-return-fee"
 question = "My rental CW-1008 ends at 12:00. If I bring it back at 14:30, how much extra do I pay?"
 tools = ["calculate_late_fee"]
-must_contain = ["18"]
+amounts = [18]
 
 # --- Refusals ---
 
@@ -182,3 +188,13 @@ must_not_contain = ["flour", "sugar"]
 id = "weather-tomorrow"
 question = "What will the weather be like tomorrow?"
 refuse = true
+
+# --- Added after the external review ---
+
+[[case]]
+id = "cancel-request"
+question = "Please cancel my booking CW-1001."
+tools = ["calculate_refund"]
+amounts = [90]
+must_contain = [["help@citywheels.example", "+48 000 000 000"]]
+no_action_claim = true

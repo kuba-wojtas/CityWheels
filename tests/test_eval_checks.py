@@ -13,6 +13,9 @@ REFUND = ToolCall(
         "total_refund_eur": 340.0,
     },
 )
+REFUND_50 = ToolCall(
+    "calculate_refund", "{}", {"status": "ok", "deposit_refund_eur": 50.0, "total_refund_eur": 50.0}
+)
 PRICES = ToolCall(
     "search_policies",
     '{"query": "e-bike price"}',
@@ -63,7 +66,7 @@ def test_refusal_needs_staff_contact():
     case = {"refuse": True}
 
     assert check(case, "I can't help with that.", []) == ["no staff contact"]
-    assert check(case, "I can't help. Contact help@citywheels.example.", []) == []
+    assert check(case, "I can't help with that. Contact help@citywheels.example.", []) == []
 
 
 def test_clarify_needs_a_question_and_no_quote():
@@ -111,3 +114,64 @@ def test_recheck_rebuilds_tool_results_from_saved_arguments():
 
     assert run["results"][0]["failures"] == []
     assert run["results"][1]["failures"] == ["request failed"]
+
+
+@pytest.mark.parametrize(
+    "answer",
+    ["Please provide a valid booking.", "The staff decide.", "I don't know."],
+)
+def test_short_words_only_match_whole_words(answer):
+    # From the review: "ID" matched "valid" / "decide", "no" matched "know".
+    case = {"must_contain": [["ID"], ["no"]]}
+
+    assert check(case, answer, []) == ["missing ID", "missing no"]
+
+
+def test_amounts_are_compared_as_numbers_not_text():
+    case = {"amounts": [50]}
+
+    assert check(case, "You get 50.00 EUR back.", [REFUND_50]) == []
+    assert check(case, "You get 50% of 150 EUR.", [REFUND_50]) == [
+        "missing amount 50",
+        "unsupported amounts 150",
+    ]
+
+
+def test_tool_status_check():
+    case = {"statuses": {"get_booking": "not_found"}}
+    not_found = ToolCall("get_booking", "{}", {"status": "not_found", "booking_id": "CW-1234"})
+    found = ToolCall("get_booking", "{}", {"status": "ok"})
+
+    assert check(case, "Not found.", [not_found]) == []
+    assert check(case, "Here it is.", [found]) == ["get_booking didn't return not_found"]
+
+
+def test_refusal_needs_to_refuse_not_just_give_the_contact():
+    case = {"refuse": True}
+
+    assert check(case, "Mix flour and sugar. Questions? help@citywheels.example", []) == [
+        "didn't refuse"
+    ]
+
+
+def test_claiming_a_cancellation_fails():
+    case = {"no_action_claim": True}
+
+    assert check(case, "Your booking CW-1003 has been canceled.", []) == [
+        "claims it cancelled or changed the booking"
+    ]
+    assert check(case, "Contact the staff to cancel it.", []) == []
+
+
+def test_numbers_that_are_not_amounts_dont_support_an_amount():
+    # hours_before_start is 33, but "33 EUR" was never returned as money.
+    refund = ToolCall("calculate_refund", "{}", {"status": "ok", "hours_before_start": 33.0})
+
+    assert unsupported_amounts("That is 33 EUR.", [refund]) == ["33"]
+
+
+def test_policy_numbers_without_currency_dont_support_an_amount():
+    # The 6 in "longer than 6 hours" used to let a made-up "6.00 EUR" through.
+    rule = ToolCall("search_policies", "{}", {"results": [{"text": "longer than 6 hours"}]})
+
+    assert unsupported_amounts("The fee is 6.00 EUR per hour.", [rule]) == ["6"]

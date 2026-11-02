@@ -1,7 +1,9 @@
-"""Run the agent on eval/cases.toml and write eval/results.md.
+"""Run the agent on eval/cases.toml.
 
 Run:    uv run python eval/run_eval.py [--provider gemini] [--model ...] [--runs 3]
+        Saves eval/runs/<time>-<provider>.json and a report next to it (.md).
 Report: uv run python eval/run_eval.py --report eval/runs/<file>.json [more files...] [--recheck]
+        Writes the combined eval/results.md.
 """
 
 import argparse
@@ -18,11 +20,18 @@ from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 from openai import APIError, RateLimitError
 
-from citywheels.agent import AgentResult, ToolCall, new_conversation, run_agent, run_tool
+from citywheels.agent import (
+    STAFF_EMAIL,
+    STAFF_PHONE,
+    AgentResult,
+    ToolCall,
+    new_conversation,
+    run_agent,
+    run_tool,
+)
 from citywheels.llm import make_client, resolve_provider
 
 EVAL_DIR = Path(__file__).parent
-STAFF_CONTACT = ("help@citywheels.example", "+48 000 000 000")
 
 # Seconds to wait per model request, to stay under each free tier's limits.
 # Gemini Flash-Lite: 15 requests/min. Groq: 8000 tokens/min, one request is ~1200 tokens.
@@ -32,7 +41,15 @@ AMOUNT = re.compile(
     r"(?:€|\beur\b)\s*(\d+(?:[.,]\d{1,2})?)|(\d+(?:[.,]\d{1,2})?)\s*(?:€|\beur\b|\beuros?\b)",
     re.IGNORECASE,
 )
-NUMBER = re.compile(r"\d+(?:\.\d+)?")
+REFUSAL = (
+    "can't help", "cannot help", "can't assist", "cannot assist", "unable to help",
+    "not able to help", "can only help", "only help with", "can't answer", "cannot answer",
+    "not related to citywheels", "nie mogę",
+)  # fmt: skip
+CLAIMED_ACTION = re.compile(
+    r"\b(?:has|have) been (?:cancell?ed|changed)\b|\bi(?:'ve| have) (?:cancell?ed|changed)\b"
+    r"|\bis now cancell?ed\b"
+)
 
 # Some models write typographic apostrophes and hyphens ("couldn’t", "CW‑1002").
 TYPOGRAPHY = str.maketrans({"’": "'", "‘": "'", "‐": "-", "‑": "-", "–": "-"})
@@ -42,23 +59,31 @@ def to_number(text: str) -> float:
     return round(float(text.replace(",", ".")), 2)
 
 
-def numbers_in(value) -> set[float]:
-    """Every number in a tool result, including numbers inside text (policy sections)."""
+def amounts_in(text: str) -> set[float]:
+    return {to_number(a or b) for a, b in AMOUNT.findall(text)}
+
+
+def allowed_amounts(value, key: str = "") -> set[float]:
+    """EUR amounts a tool returned: `*_eur` fields, and amounts written in policy text."""
     if isinstance(value, dict):
-        value = list(value.values())
+        return set().union(*(allowed_amounts(v, k) for k, v in value.items()))
     if isinstance(value, list):
-        return set().union(*(numbers_in(v) for v in value))
+        return set().union(*(allowed_amounts(v, key) for v in value))
     if isinstance(value, str):
-        return {to_number(n) for n in NUMBER.findall(value)}
-    if isinstance(value, int | float) and not isinstance(value, bool):
+        return amounts_in(value)
+    if isinstance(value, int | float) and not isinstance(value, bool) and key.endswith("_eur"):
         return {round(float(value), 2)}
     return set()
 
 
 def unsupported_amounts(answer: str, calls: list[ToolCall]) -> list[str]:
-    allowed = numbers_in([c.result for c in calls])
-    amounts = [a or b for a, b in AMOUNT.findall(answer)]
-    return sorted({a for a in amounts if to_number(a) not in allowed})
+    allowed = allowed_amounts([c.result for c in calls])
+    return sorted(f"{a:g}" for a in amounts_in(answer) - allowed)
+
+
+def contains(text: str, phrase: str) -> bool:
+    # Whole words only: "ID" must not match "valid", "50" must not match "150".
+    return re.search(rf"(?<!\w){re.escape(phrase.lower())}(?!\w)", text) is not None
 
 
 def check(case: dict, answer: str, calls: list[ToolCall]) -> list[str]:
@@ -71,20 +96,31 @@ def check(case: dict, answer: str, calls: list[ToolCall]) -> list[str]:
             failures.append(f"{tool} not called")
     if "tools_any" in case and not called & set(case["tools_any"]):
         failures.append(f"none of {case['tools_any']} called")
+    for tool, status in case.get("statuses", {}).items():
+        if status not in [c.result.get("status") for c in calls if c.name == tool]:
+            failures.append(f"{tool} didn't return {status}")
+    for value in case.get("amounts", []):
+        if round(value, 2) not in amounts_in(answer):
+            failures.append(f"missing amount {value:g}")
     for item in case.get("must_contain", []):
         options = item if isinstance(item, list) else [item]
-        if not any(option.lower() in text for option in options):
+        if not any(contains(text, option) for option in options):
             failures.append(f"missing {' / '.join(options)}")
     for item in case.get("must_not_contain", []):
-        if item.lower() in text:
+        if contains(text, item):
             failures.append(f"contains {item}")
-    if case.get("refuse") and not any(c in text for c in STAFF_CONTACT):
-        failures.append("no staff contact")
+    if case.get("refuse"):
+        if not (contains(text, STAFF_EMAIL) or contains(text, STAFF_PHONE)):
+            failures.append("no staff contact")
+        if not any(phrase in text for phrase in REFUSAL):
+            failures.append("didn't refuse")
     if case.get("clarify"):
         if "?" not in answer:
             failures.append("didn't ask a question")
         if "quote_price" in called:
             failures.append("quoted a price without asking")
+    if case.get("no_action_claim") and CLAIMED_ACTION.search(text):
+        failures.append("claims it cancelled or changed the booking")
     if case.get("language") == "pl" and not re.search("[ąćęłńóśźż]", text):
         failures.append("not in Polish")
     if unsupported := unsupported_amounts(answer, calls):
@@ -92,15 +128,16 @@ def check(case: dict, answer: str, calls: list[ToolCall]) -> list[str]:
     return failures
 
 
-def run_turn(client, model: str, messages: list[dict], question: str) -> AgentResult:
+def run_turn(client, model: str, messages: list[dict], question: str) -> tuple[AgentResult, int]:
+    """One agent turn, retried once after a rate limit. Returns the seconds spent waiting."""
     turn_start = len(messages)
     try:
-        return run_agent(client, model, messages, question)
+        return run_agent(client, model, messages, question), 0
     except RateLimitError:
         del messages[turn_start:]
         print("  rate limited, waiting 60 s", flush=True)
         time.sleep(60)
-        return run_agent(client, model, messages, question)
+        return run_agent(client, model, messages, question), 60
 
 
 def run_case(client, model: str, case: dict, pace: float) -> dict:
@@ -108,9 +145,10 @@ def run_case(client, model: str, case: dict, pace: float) -> dict:
     calls: list[ToolCall] = []
     record = {"id": case["id"], "steps": 0, "input_tokens": 0, "output_tokens": 0}
     started = time.monotonic()
+    waited = 0.0
     for question in case.get("turns", [case.get("question")]):
         try:
-            result = run_turn(client, model, messages, question)
+            result, rate_limit_wait = run_turn(client, model, messages, question)
         except APIError as e:
             # A failed request counts as a failed case instead of stopping the whole run.
             failure = f"request failed: {type(e).__name__}"
@@ -121,8 +159,9 @@ def run_case(client, model: str, case: dict, pace: float) -> dict:
         record["input_tokens"] += result.input_tokens
         record["output_tokens"] += result.output_tokens
         time.sleep(pace * result.steps)
+        waited += rate_limit_wait + pace * result.steps
 
-    record["seconds"] = round(time.monotonic() - started - pace * record["steps"], 1)
+    record["seconds"] = round(time.monotonic() - started - waited, 1)
     record["answer"] = result.answer
     record["gave_up"] = result.gave_up
     record["tool_calls"] = [asdict(c) for c in calls]
@@ -156,13 +195,16 @@ def git_commit() -> str:
     return out.stdout.strip()
 
 
-def write_report(runs: list[dict], cases: list[dict]) -> str:
+def write_report(
+    runs: list[dict], cases: list[dict], rechecked: bool = False, cases_file: str = "cases.toml"
+) -> str:
     questions = {c["id"]: c.get("question") or " / ".join(c["turns"]) for c in cases}
+    scored = f"Rechecked with the checks at commit {git_commit()}." if rechecked else ""
     lines = [
         "# Evaluation results",
         "",
-        f"{len(cases)} cases from `eval/cases.toml`, each run several times per model.",
-        "A case passes in a run when all its checks pass. Stable = passed in every run.",
+        f"{len(cases)} cases from `eval/{cases_file}`. A case passes in a run when all its checks",
+        f"pass. Stable = passed in every run. Commit = the code the model ran on. {scored}",
         "",
         "| provider | model | runs | stable cases | passed runs | unsupported amounts "
         "| median time | avg tokens | commit |",
@@ -177,10 +219,11 @@ def write_report(runs: list[dict], cases: list[dict]) -> str:
         passed = sum(not r["failures"] for r in results)
         made_up = sum(any("unsupported" in f for f in r["failures"]) for r in results)
         times = [r["seconds"] for r in results if "seconds" in r]
+        median = f"{statistics.median(times):.1f} s" if times else "n/a"
         tokens = [r["input_tokens"] + r["output_tokens"] for r in results]
         lines.append(
             f"| {run['provider']} | {run['model']} | {run['runs']} | {stable}/{len(by_case)} "
-            f"| {passed}/{len(results)} | {made_up} | {statistics.median(times):.1f} s "
+            f"| {passed}/{len(results)} | {made_up} | {median} "
             f"| {statistics.mean(tokens):.0f} | {run['commit']} |"
         )
 
@@ -204,18 +247,20 @@ def main():
     parser.add_argument("--provider")
     parser.add_argument("--model")
     parser.add_argument("--runs", type=int, default=3)
+    parser.add_argument("--cases", type=Path, default=EVAL_DIR / "cases.toml")
     parser.add_argument("--only", nargs="+", help="case ids to run")
-    parser.add_argument("--report", nargs="+", type=Path, help="rebuild results.md from runs")
+    parser.add_argument("--report", nargs="+", type=Path, help="write results.md from runs")
     parser.add_argument("--recheck", action="store_true", help="score saved answers again")
     args = parser.parse_args()
 
-    cases = tomllib.loads((EVAL_DIR / "cases.toml").read_text())["case"]
+    cases = tomllib.loads(args.cases.read_text())["case"]
     if args.report:
         runs = [json.loads(path.read_text()) for path in args.report]
         if args.recheck:
             for run in runs:
                 recheck(run, cases)
-        (EVAL_DIR / "results.md").write_text(write_report(runs, cases))
+        report = write_report(runs, cases, args.recheck, args.cases.name)
+        (EVAL_DIR / "results.md").write_text(report)
         return
 
     load_dotenv(find_dotenv(usecwd=True))
@@ -233,7 +278,8 @@ def main():
     }
     runs_dir = EVAL_DIR / "runs"
     runs_dir.mkdir(exist_ok=True)
-    path = runs_dir / f"{datetime.now():%Y%m%d-%H%M}-{provider}.json"
+    run["cases_file"] = args.cases.name
+    path = runs_dir / f"{datetime.now():%Y%m%d-%H%M}-{provider}-{args.cases.stem}.json"
 
     for n in range(1, args.runs + 1):
         for case in selected:
@@ -245,9 +291,9 @@ def main():
             status = "PASS" if not record["failures"] else "FAIL " + "; ".join(record["failures"])
             print(f"[{n}/{args.runs}] {case['id']}: {status}", flush=True)
 
-    if not args.only:
-        (EVAL_DIR / "results.md").write_text(write_report([run], selected))
-    print(f"saved {path}")
+    # The combined results.md is only written by --report, so one run can't overwrite it.
+    path.with_suffix(".md").write_text(write_report([run], selected, cases_file=args.cases.name))
+    print(f"saved {path} and {path.with_suffix('.md').name}")
 
 
 if __name__ == "__main__":

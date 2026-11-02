@@ -166,6 +166,17 @@
 - Same check, new invented fact: "136.85 ... includes a €50 deposit and a €2 fee" (it doesn't). Next try said "plus". Amounts from tools, wording invented.
 - 144 tests (tool error, limits, notes, empty provider response, timeout message, winter time, date-only cancel time, more booking id formats, follow-up test checks content).
 
+### FIXES AFTER REVIEW: EVAL
+- Whole-word matching ("ID" no longer matches "valid", "no" no longer matches "know").
+- `amounts`: EUR amounts pulled from the answer and compared as numbers ("50" no longer passes on "50%").
+- `statuses`: tool must have returned a given status (unknown booking checks `not_found` instead of a phrase list).
+- Refusal = refusal phrase + contact, not contact alone.
+- `no_action_claim`: fails on "has been cancelled" style claims. New case `cancel-request`.
+- Amount check: only `*_eur` fields and amounts written in policy text count as supported (the "6.00 EUR" from "longer than 6 hours" would now be caught).
+- Runner: single runs write their own .md next to the JSON, only `--report` writes results.md. Rate-limit waits not counted as time. `--cases` to run another case file.
+- Tried raising the Polish check to 2 diacritics -> a correct short answer ("Otwieramy w sobotę o 08:00.") failed its test. Reverted to 1.
+- Rechecked the saved runs: Gemini 78 -> 78, Groq 66 -> 66 (unknown-booking now passes, "has been canceled" now fails), Ollama 23 -> 24. No false alarms on real refusals.
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
 - Claude suggested GitHub Models from memory (the task description lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: double check provider docs before writing config.
