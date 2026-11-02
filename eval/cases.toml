@@ -86,6 +86,7 @@ tools = ["get_booking"]
 must_contain = [[
     "not found", "couldn't find", "could not find", "can't find", "cannot find",
     "no booking", "doesn't exist", "does not exist", "unable to find",
+    "wasn't found", "was not found",
 ]]
 
 [[case]]

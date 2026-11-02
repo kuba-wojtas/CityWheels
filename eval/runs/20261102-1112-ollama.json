@@ -1,0 +1,59 @@
+{
+  "provider": "ollama",
+  "model": "qwen3:4b",
+  "runs": 1,
+  "date": "2026-11-02 11:12",
+  "commit": "98f69d6-dirty",
+  "results": [
+    {
+      "id": "refund-bare-number",
+      "steps": 3,
+      "input_tokens": 6434,
+      "output_tokens": 2307,
+      "seconds": 96.6,
+      "answer": "Your refund of 50.00 EUR will be processed to your card within 2 business days.",
+      "gave_up": false,
+      "tool_calls": [
+        {
+          "name": "get_booking",
+          "arguments": "{\"booking_id\":\"1003\"}",
+          "result": {
+            "status": "ok",
+            "booking": {
+              "id": "CW-1003",
+              "status": "confirmed",
+              "bike_type": "city",
+              "bikes": 1,
+              "start": "2026-06-10T15:00:00+02:00",
+              "end": "2026-06-10T18:00:00+02:00",
+              "add_ons": [],
+              "rental_price_eur": 12.0,
+              "booking_fee_eur": 2.0,
+              "deposit_eur": 50.0,
+              "paid_with": "card"
+            }
+          }
+        },
+        {
+          "name": "calculate_refund",
+          "arguments": "{\"booking_id\":\"CW-1003\"}",
+          "result": {
+            "status": "ok",
+            "booking_id": "CW-1003",
+            "cancel_at": "2026-06-10T09:00:00+02:00",
+            "hours_before_start": 6.0,
+            "refund_percent": 0,
+            "rental_refund_eur": 0.0,
+            "deposit_refund_eur": 50.0,
+            "booking_fee_kept_eur": 2.0,
+            "total_refund_eur": 50.0,
+            "rental_refund_method": "card",
+            "deposit_refund_method": "same_as_paid"
+          }
+        }
+      ],
+      "failures": [],
+      "run": 1
+    }
+  ]
+}

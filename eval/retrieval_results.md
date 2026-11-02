@@ -1,15 +1,15 @@
 # search_policies variants
 
-27 queries from `retrieval_queries.toml`, top 3 results.
+28 queries from `retrieval_queries.toml`, top 3 results.
 
 | variant | hit@1 | hit@3 | hit@3 mismatch | off-topic no match |
 | --- | --- | --- | --- | --- |
-| overlap | 16/23 | 20/23 | 7/10 | 1/4 |
-| bm25, no stemming | 17/23 | 19/23 | 6/10 | 1/4 |
-| bm25, heading x1 | 20/23 | 21/23 | 8/10 | 1/4 |
-| bm25, heading x1.5 | 20/23 | 21/23 | 8/10 | 1/4 |
-| bm25, heading x2 | 21/23 | 21/23 | 8/10 | 1/4 |
-| bm25, heading x3 | 21/23 | 21/23 | 8/10 | 1/4 |
+| overlap | 17/24 | 21/24 | 8/11 | 1/4 |
+| bm25, no stemming | 17/24 | 19/24 | 6/11 | 1/4 |
+| bm25, heading x1 | 21/24 | 22/24 | 9/11 | 1/4 |
+| bm25, heading x1.5 | 21/24 | 22/24 | 9/11 | 1/4 |
+| bm25, heading x2 | 22/24 | 22/24 | 9/11 | 1/4 |
+| bm25, heading x3 | 22/24 | 22/24 | 9/11 | 1/4 |
 
 ## Misses, bm25 heading x2 (current default)
 

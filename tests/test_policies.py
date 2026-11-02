@@ -18,7 +18,12 @@ def test_policies_are_split_into_sections():
 
 
 @pytest.mark.parametrize(
-    "words", [["cancel", "cancelled", "cancelling"], ["year", "years"], ["change", "changed"]]
+    "words",
+    [
+        ["cancel", "cancelled", "cancelling", "cancellation", "cancellations"],
+        ["year", "years"],
+        ["change", "changed"],
+    ],
 )
 def test_word_forms_share_a_token(words):
     assert len({tokenize(w)[0] for w in words}) == 1
@@ -35,6 +40,7 @@ def test_stopwords_are_dropped():
         ("How much is an e-bike for a whole day?", "Bike rental"),
         ("Can my 14-year-old rent an e-bike?", "Are there age limits?"),
         ("I want to cancel my booking", "Cancelling a booking"),
+        ("cancellation", "Cancelling a booking"),
         ("storm warning", "Bad weather"),
         ("What happens if I return the bike late?", "Late return"),
     ],

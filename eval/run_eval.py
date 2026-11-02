@@ -161,12 +161,12 @@ def write_report(runs: list[dict], cases: list[dict]) -> str:
     lines = [
         "# Evaluation results",
         "",
-        f"{len(cases)} cases from `eval/cases.toml`, each run {runs[0]['runs']} times.",
+        f"{len(cases)} cases from `eval/cases.toml`, each run several times per model.",
         "A case passes in a run when all its checks pass. Stable = passed in every run.",
         "",
-        "| provider | model | stable cases | passed runs | unsupported amounts "
+        "| provider | model | runs | stable cases | passed runs | unsupported amounts "
         "| median time | avg tokens | commit |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for run in runs:
         results = run["results"]
@@ -179,7 +179,7 @@ def write_report(runs: list[dict], cases: list[dict]) -> str:
         times = [r["seconds"] for r in results if "seconds" in r]
         tokens = [r["input_tokens"] + r["output_tokens"] for r in results]
         lines.append(
-            f"| {run['provider']} | {run['model']} | {stable}/{len(by_case)} "
+            f"| {run['provider']} | {run['model']} | {run['runs']} | {stable}/{len(by_case)} "
             f"| {passed}/{len(results)} | {made_up} | {statistics.median(times):.1f} s "
             f"| {statistics.mean(tokens):.0f} | {run['commit']} |"
         )

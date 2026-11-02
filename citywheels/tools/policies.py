@@ -46,9 +46,9 @@ def load_sections() -> tuple[Section, ...]:
 
 
 def stem(word: str) -> str:
-    # Crude suffix stripping, just enough to match cancel/cancelled/cancelling, year/years,
-    # change/changed. A real stemmer (NLTK) would be overkill for three documents.
-    for suffix in ("ing", "ed", "s"):
+    # Crude suffix stripping, just enough to match cancel/cancelled/cancelling/cancellation,
+    # year/years, change/changed. A real stemmer (NLTK) would be overkill for three documents.
+    for suffix in ("ations", "ation", "ing", "ed", "s"):
         if word.endswith(suffix) and len(word) - len(suffix) >= 3:
             word = word[: -len(suffix)]
             break

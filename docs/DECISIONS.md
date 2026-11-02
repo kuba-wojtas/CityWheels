@@ -105,6 +105,7 @@
 ### Crude stemming + stopwords
 - Strip -ing/-ed/-s, trailing e, doubled letter -> cancel/cancelled/cancelling, year/years match.
 - Without it hit@3 drops 21 -> 19. NLTK stemmer = overkill.
+- Later added -ation / -ations after Ollama searched "cancellation" and got no match.
 
 ### Heading weight x2
 - FAQ headings are the questions themselves -> strong signal.

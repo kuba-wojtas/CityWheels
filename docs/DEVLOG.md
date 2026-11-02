@@ -135,6 +135,20 @@
 - Older runs have no tool results -> rebuilt by running the tools again with saved arguments (tools are deterministic).
 - Gemini control rechecked = same 26/26 -> recheck reproduces scores.
 
+### EVAL: OLLAMA
+- `qwen3:4b`, 1 run, 31 min, no timeouts. 23/26 (24/26 after checker fix). Median 67 s per case (max 193 s), ~4700 tokens (thinking counts).
+- Better than Groq on behaviour: Polish question -> Polish answer with summer hours.
+- `documents`: answered about parental consent instead of ID / passport. Real model miss.
+- `unknown-booking`: "wasn't found" not in my phrase list -> checker bug #2. Phrase lists are brittle; checking the tool's `not_found` status would be more robust.
+- `refund-bare-number`: called `search_policies("cancellation")` -> `no_match`. Stemmer only stripped -ing/-ed/-s, so "cancellation" never became "cancel". Model gave up and sent the customer to staff. Gemini and Groq went straight to calculate_refund, so they never hit it. Retrieval eval didn't catch it either (no query had "cancellation").
+
+### FIXES AFTER OLLAMA
+- Checker: added "wasn't found" / "was not found".
+- Stemmer: strip -ation / -ations. Added "What is your cancellation policy?" to retrieval queries. Old stemmer: no match. New: found, BM25 x2 22/24 hit@1 and hit@3, nothing else changed.
+- Provider runs were all done before the stemmer fix -> still comparable with each other. Not rerun (1h+ for one word the cloud models never used).
+- Reran `refund-bare-number` on Ollama: passed, but it skipped search this time and called calculate_refund directly -> the pass says nothing about the fix. Also said refund comes "within 2 business days" (policy: 5 working days) without looking it up. Checker only checks amounts, so invented non-amount facts pass.
+- Combined report: `--report` with Gemini control, Groq, Ollama + `--recheck`. Added "runs" column (Ollama has 1).
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
 - Claude suggested GitHub Models from memory (the task description lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: double check provider docs before writing config.
