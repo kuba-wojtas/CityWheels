@@ -107,6 +107,12 @@
 - Fixes: client timeout 120 s (default is 10 min), results saved after every case, failed request = failed case instead of a crash.
 - Use `caffeinate -i` for long runs on macOS.
 
+### EVAL: CONTROL RUN
+- Clean commit 0ffb0b8, `caffeinate -i`, 14 min, no 429, no hangs.
+- 26/26 stable, 78/78 runs, 0 unsupported amounts (baseline: 22/26, 68/78, 3). Median 1.3 s. Tokens 2261 -> 2518 (longer prompt + 5th tool).
+- Not reading this as "done": `open-saturday` failed 1/7 runs since the fix (in the hung run). Cases written by me, the 4 baseline fails were fixed on purpose. Checks are lenient (substring, contact = refusal, any number from tools = supported).
+- Next: Groq + Ollama on the same cases for a real spread.
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
 - Claude suggested GitHub Models from memory (the task description lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: double check provider docs before writing config.
