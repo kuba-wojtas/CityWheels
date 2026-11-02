@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from citywheels.data import NOW, Booking
+from citywheels.data import NOW, Booking, parse_shop_time
 from citywheels.tools.refunds import calculate_refund, compute_refund
 
 
@@ -157,3 +157,15 @@ def test_booking_fee_is_never_refunded():
     assert quote.refund_percent == 100
     assert quote.booking_fee_kept_eur == 5.0
     assert quote.total_refund_eur == 75.5
+
+
+def test_date_without_time_means_midnight():
+    # Documented behaviour: "2026-06-11" is 00:00 shop time, 18h before CW-1002 starts.
+    result = calculate_refund("CW-1002", cancel_at="2026-06-11")
+
+    assert result["cancel_at"] == "2026-06-11T00:00:00+02:00"
+    assert result["refund_percent"] == 0
+
+
+def test_shop_time_follows_warsaw_winter_time():
+    assert parse_shop_time("2026-12-01T10:00").isoformat() == "2026-12-01T10:00:00+01:00"

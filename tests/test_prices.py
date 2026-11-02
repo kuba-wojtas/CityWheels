@@ -119,10 +119,10 @@ def test_both_booking_fees_are_returned():
         ("city", 3, 1, ["basket"]),
     ],
 )
-def test_invalid_input_is_rejected(bike_type, hours, bikes, add_ons):
+def test_invalid_arguments_are_rejected(bike_type, hours, bikes, add_ons):
     result = quote_price(bike_type, hours, bikes, add_ons)
 
-    assert result["status"] == "invalid_input"
+    assert result["status"] == "invalid_arguments"
     assert result["reason"]
 
 
@@ -164,3 +164,19 @@ def test_late_fee_not_applicable_to_cancelled_or_completed(booking_id):
 def test_late_fee_unknown_booking_and_bad_time():
     assert calculate_late_fee("CW-9999", "2026-06-10T14:00")["status"] == "not_found"
     assert calculate_late_fee("CW-1008", "at 2pm")["status"] == "invalid_return_time"
+
+
+@pytest.mark.parametrize(
+    "hours, bikes",
+    [(float("inf"), 1), (float("nan"), 1), (31 * 24, 1), (3, 21), (3, 10**12)],
+)
+def test_absurd_quotes_are_rejected_not_computed(hours, bikes):
+    assert quote_price("city", hours, bikes)["status"] == "invalid_arguments"
+
+
+def test_quote_on_an_unclear_rule_carries_a_note():
+    assert "notes" not in quote_price("city", 24, 1)
+    assert "notes" not in quote_price("city", 7 * 24, 1)
+
+    assert "after full days" in quote_price("city", 26, 1)["notes"][0]
+    assert "add-ons too" in quote_price("city", 7 * 24, 1, ["child_seat"])["notes"][0]

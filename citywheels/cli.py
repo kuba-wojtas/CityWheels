@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from dotenv import find_dotenv, load_dotenv
-from openai import APIConnectionError, APIStatusError, OpenAI, RateLimitError
+from openai import APIConnectionError, APIStatusError, APITimeoutError, OpenAI, RateLimitError
 
 from citywheels.agent import AgentResult, new_conversation, run_agent
 from citywheels.llm import PROVIDERS, ConfigError, make_client
@@ -36,6 +36,8 @@ def ask(client: OpenAI, model: str, messages: list[dict], question: str, quiet: 
         result = run_agent(client, model, messages, question)
     except RateLimitError:
         error = "Rate limit reached, wait a minute and try again."
+    except APITimeoutError:
+        error = "The model didn't answer in time, try again."
     except APIConnectionError:
         error = f"Can't reach {client.base_url}. If you use Ollama, is `ollama serve` running?"
     except APIStatusError as e:

@@ -35,7 +35,7 @@
 - Already installed (dependency of `openai`) -> no new dependency.
 - Bad args / unknown tool -> `invalid_arguments` / `unknown_tool` result sent back to the model, it can retry. No crash.
 - `booking_id` sent as a number (1002) is coerced to "1002".
-- Exceptions inside a tool (= our bug) are not caught -> fail loudly.
+- ~~Exceptions inside a tool (= our bug) are not caught -> fail loudly.~~ Changed after the review, see "Tool errors" below.
 
 ### Agent loop
 - Plain loop, max 6 steps, then a fixed "contact the staff" answer.
@@ -63,6 +63,18 @@
 - Point of the comparison: how much depends on the model. Groq results show a prompt tuned on one model doesn't carry over.
 - Ollama gets 1 run instead of 3 (~2 min per question on 8 GB RAM) -> no stability numbers for it.
 
+### Changed after the external review
+Two reviews with no project context (a fresh Claude agent and Codex), read-only. Changes:
+- **Tool errors:** `run_tool` catches exceptions -> `tool_error` result + log line. A customer shouldn't get a traceback. Unit tests call tools directly, so bugs still fail there.
+- **Agent can't cancel:** prompt + `calculate_refund` description say so. Groq had answered "has been canceled".
+- **"A bike" means one bike:** Groq asked "how many?" for "a city bike for a week".
+- **quote_price limits:** 1-20 bikes, up to 30 days. Not in the policy, bigger requests go to the staff. Before: 10**12 bikes gave a quote, `Infinity` hours crashed.
+- **One error status:** `invalid_input` renamed to `invalid_arguments`, same as Pydantic validation.
+- **Notes on unclear rules:** quote_price adds `notes` when the price depends on our reading (rest after full days, discount on add-ons). Prompt: pass notes on.
+- **Time zone:** `ZoneInfo("Europe/Warsaw")` + `tzdata` dependency instead of fixed +02:00. Same result for June data, correct for winter dates. (Rejected in step 1 because of Windows, `tzdata` fixes that.)
+- **Date without time** in `cancel_at` = midnight. Kept, documented and tested.
+- Not changed: relevance threshold in search (see "No tuning for off-topic queries"), chat history limit (sessions are short).
+
 ### CLI only
 - Task asks for CLI. Web/TUI considered, dropped -> time goes to agent, tests, eval.
 
@@ -80,6 +92,7 @@
 
 ### Loose booking numbers
 - `cw-1002`, ` CW-1002 `, `1002` -> `CW-1002`. Customers often type just the number.
+- After the review also `cw1002`, `CW 1002` and a non-breaking hyphen (Groq writes those).
 
 ### calculate_refund takes only booking id (+ optional cancel time)
 - Model never passes amounts or percentages -> nothing for it to calculate.

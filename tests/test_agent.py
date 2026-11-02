@@ -4,6 +4,7 @@ from citywheels.agent import (
     GIVE_UP_ANSWER,
     MAX_STEPS,
     TOOL_SCHEMAS,
+    TOOLS,
     new_conversation,
     run_agent,
     run_tool,
@@ -122,6 +123,8 @@ def test_follow_up_question_sees_the_earlier_turn():
         "user",
     ]
     assert third[-1]["content"] == "And if I cancel tomorrow?"
+    # The refund from the first turn is still there for the model to build on.
+    assert tool_messages(third)[0]["total_refund_eur"] == 90.0
 
 
 def test_booking_number_sent_as_a_number_is_accepted():
@@ -145,3 +148,36 @@ def test_every_tool_has_a_schema():
         "quote_price",
         "calculate_late_fee",
     }
+
+
+def test_tool_crash_becomes_an_error_result(monkeypatch):
+    def broken(booking_id):
+        raise OverflowError("boom")
+
+    monkeypatch.setitem(TOOLS, "get_booking", (broken, *TOOLS["get_booking"][1:]))
+    client = FakeClient(
+        completion(tool_calls=[tool_call("c1", "get_booking", {"booking_id": "CW-1002"})]),
+        completion(content="Sorry, please contact the staff."),
+    )
+
+    result = run_agent(client, "fake", new_conversation(), "Status of CW-1002?")
+
+    assert tool_messages(client.requests[1]) == [{"status": "tool_error", "name": "get_booking"}]
+    assert result.answer == "Sorry, please contact the staff."
+
+
+def test_out_of_range_quote_is_rejected_before_running():
+    result = run_tool("quote_price", '{"bike_type": "city", "duration_hours": 1e400, "bikes": 1}')
+
+    assert result["status"] == "invalid_arguments"
+
+
+def test_empty_response_from_provider_gives_up():
+    empty = completion(content="x")
+    empty.choices = []
+    messages = new_conversation()
+
+    result = run_agent(FakeClient(empty), "fake", messages, "Hi")
+
+    assert result.gave_up
+    assert messages[-1]["content"] == GIVE_UP_ANSWER

@@ -17,12 +17,20 @@ LATE_FEE_HOURLY_MULTIPLIER = 1.5
 
 MINUTES_PER_DAY = 24 * 60
 
+# Not in the policy. Bigger groups or longer rentals are sent to the staff instead of quoted.
+MAX_BIKES = 20
+MAX_HOURS = 30 * 24
+
 
 class QuotePriceArgs(BaseModel):
     bike_type: Literal["city", "e-bike", "kids"]
-    duration_hours: float = Field(description="Rental length in hours, e.g. 24 for a day")
-    bikes: int = Field(description="Number of bikes")
-    add_ons: list[Literal["child_seat", "extra_lock", "helmet"]] = Field(default_factory=list)
+    duration_hours: float = Field(
+        gt=0, le=MAX_HOURS, description="Rental length in hours, e.g. 24 for a day"
+    )
+    bikes: int = Field(ge=1, le=MAX_BIKES, description="Number of bikes")
+    add_ons: list[Literal["child_seat", "extra_lock", "helmet"]] = Field(
+        default_factory=list, description="One entry per item, e.g. two child seats = two entries"
+    )
 
 
 @dataclass(frozen=True)
@@ -71,25 +79,34 @@ def compute_price(
 def quote_price(
     bike_type: str, duration_hours: float, bikes: int, add_ons: list[str] | None = None
 ) -> dict:
+    # The agent validates arguments with QuotePriceArgs first. These checks keep the tool
+    # safe when it's called directly, and use the same status as the agent's validation.
     add_ons = add_ons or []
     if bike_type not in HOURLY_EUR:
         return {
-            "status": "invalid_input",
+            "status": "invalid_arguments",
             "reason": f"unknown bike type {bike_type!r}, expected one of {list(HOURLY_EUR)}",
         }
-    if duration_hours <= 0:
-        return {"status": "invalid_input", "reason": "duration_hours must be more than 0"}
-    if bikes < 1:
-        return {"status": "invalid_input", "reason": "bikes must be at least 1"}
+    if not 0 < duration_hours <= MAX_HOURS:
+        return {
+            "status": "invalid_arguments",
+            "reason": f"duration_hours must be over 0 and at most {MAX_HOURS}, "
+            "longer rentals go to the staff",
+        }
+    if not 1 <= bikes <= MAX_BIKES:
+        return {
+            "status": "invalid_arguments",
+            "reason": f"bikes must be 1 to {MAX_BIKES}, bigger groups go to the staff",
+        }
     unknown = [a for a in add_ons if a not in ADD_ON_PER_DAY_EUR]
     if unknown:
         return {
-            "status": "invalid_input",
+            "status": "invalid_arguments",
             "reason": f"unknown add-ons {unknown}, expected some of {list(ADD_ON_PER_DAY_EUR)}",
         }
 
     quote = compute_price(bike_type, duration_hours, bikes, add_ons)
-    return {
+    result = {
         "status": "ok",
         "bike_type": bike_type,
         "duration_hours": duration_hours,
@@ -99,6 +116,23 @@ def quote_price(
         "online_booking_fee_eur": ONLINE_BOOKING_FEE_EUR,
         "shop_booking_fee_eur": 0.0,
     }
+    # Where the quote relies on our reading of an unclear rule, say so, so the agent
+    # doesn't present it as settled policy.
+    notes = []
+    days, rest = divmod(round(duration_hours * 60), MINUTES_PER_DAY)
+    if days and rest:
+        notes.append(
+            "The price list doesn't say how to charge time after full days. This quote "
+            "charges it like a short rental (over 6 hours = a day). The staff can confirm."
+        )
+    if quote.discount_eur and quote.add_ons_eur:
+        notes.append(
+            "The weekly discount is applied to add-ons too. The price list isn't explicit "
+            "about this. The staff can confirm."
+        )
+    if notes:
+        result["notes"] = notes
+    return result
 
 
 class CalculateLateFeeArgs(BaseModel):

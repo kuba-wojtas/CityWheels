@@ -154,6 +154,18 @@
 - Action versions from current uv docs, pinned to commit hashes (a tag can be moved, a hash can't).
 - Checked locally in a copy of the project without `.env` -> 129 passed, no test depends on API keys.
 
+### EXTERNAL REVIEW
+- Asked a fresh Claude agent (no memory of the project) and Codex to review the repo read-only, as a strict reviewer. Same prompt for both.
+- Both: SOLUTION.md missing, eval checks too lenient (substrings, refusal = contact only, weak amount check), tool exception crashes the CLI, invented non-amount facts not caught, results.md hard to reproduce (rechecked, different commits).
+- Claude only: agent implied it cancelled a booking (checked: Groq "has been canceled", scored PASS), data README not in repo, `cw1002` / `CW 1002` not found, no limits in quote_price, timeout shows Ollama hint, runner overwrites results.md, stale numbers in docs.
+- Codex only: fixed UTC+02 wrong in winter, search returns something for off-topic queries, pricing assumptions shown as policy.
+- Decided which to fix, see DECISIONS "Changed after the external review".
+
+### FIXES AFTER REVIEW: AGENT
+- Live check on Groq after prompt changes: "contact our staff to process the cancellation" instead of "has been canceled". "A city bike for a week" -> quote 136.85 + the note about the discount, no "how many?".
+- Same check, new invented fact: "136.85 ... includes a €50 deposit and a €2 fee" (it doesn't). Next try said "plus". Amounts from tools, wording invented.
+- 144 tests (tool error, limits, notes, empty provider response, timeout message, winter time, date-only cancel time, more booking id formats, follow-up test checks content).
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
 - Claude suggested GitHub Models from memory (the task description lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: double check provider docs before writing config.

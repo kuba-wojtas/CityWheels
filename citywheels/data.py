@@ -1,15 +1,17 @@
 import json
+import re
 from dataclasses import asdict, dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 from functools import cache
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 POLICIES_DIR = DATA_DIR / "policies"
 
-SHOP_TZ = timezone(timedelta(hours=2))
+SHOP_TZ = ZoneInfo("Europe/Warsaw")
 
-# Fixed "current time" from the data README, so answers don't change between runs.
+# Fixed "current time" from data/README.md, so answers don't change between runs.
 NOW = datetime(2026, 6, 10, 9, 0, tzinfo=SHOP_TZ)
 
 
@@ -53,11 +55,12 @@ def load_bookings() -> dict[str, Booking]:
 
 
 def normalize_booking_id(raw: str) -> str:
-    booking_id = raw.strip().upper()
-    # Customers often type just the number, e.g. "1002".
-    if booking_id.isdigit():
-        booking_id = f"CW-{booking_id}"
-    return booking_id
+    # Customers type "1002", "cw1002" or "CW 1002" as often as "CW-1002". Some models
+    # write the hyphen as a non-breaking one (U+2011).
+    number = re.sub(r"[\s\-‐‑]", "", raw).upper().removeprefix("CW")
+    if number.isdigit():
+        return f"CW-{number}"
+    return raw.strip().upper()
 
 
 def find_booking(booking_id: str) -> Booking | None:

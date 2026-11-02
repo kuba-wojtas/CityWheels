@@ -22,7 +22,9 @@ def test_returns_add_ons():
     assert get_booking("CW-1004")["booking"]["add_ons"] == ["child_seat"]
 
 
-@pytest.mark.parametrize("raw", ["cw-1002", "  CW-1002 ", "1002", " 1002"])
+@pytest.mark.parametrize(
+    "raw", ["cw-1002", "  CW-1002 ", "1002", " 1002", "cw1002", "CW 1002", "CW\u20111002"]
+)
 def test_accepts_loose_booking_numbers(raw):
     result = get_booking(raw)
 

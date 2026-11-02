@@ -2,7 +2,7 @@
 import httpx2
 import pytest
 from fakes import FakeClient, completion, tool_call
-from openai import APIConnectionError, RateLimitError
+from openai import APIConnectionError, APITimeoutError, RateLimitError
 
 from citywheels import cli
 from citywheels.llm import ConfigError
@@ -111,3 +111,14 @@ def test_rate_limit_in_chat_drops_the_failed_turn(monkeypatch, capsys):
     assert "We open at 08:00." in captured.out
     assert [m["role"] for m in client.requests[1]] == ["system", "user"]
     assert client.requests[1][1]["content"] == "When do you open?"
+
+
+def test_timeout_has_its_own_message(monkeypatch, capsys):
+    use_client(monkeypatch, FakeClient(APITimeoutError(request=REQUEST)))
+
+    code = cli.main(["Hi"])
+
+    err = capsys.readouterr().err
+    assert code == 1
+    assert "didn't answer in time" in err
+    assert "Ollama" not in err

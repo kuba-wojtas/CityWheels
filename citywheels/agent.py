@@ -1,4 +1,5 @@
 import json
+import logging
 from dataclasses import dataclass
 
 from openai import OpenAI
@@ -15,7 +16,11 @@ from citywheels.tools.prices import (
 )
 from citywheels.tools.refunds import CalculateRefundArgs, calculate_refund
 
-STAFF_CONTACT = "help@citywheels.example, +48 000 000 000"
+log = logging.getLogger(__name__)
+
+STAFF_EMAIL = "help@citywheels.example"
+STAFF_PHONE = "+48 000 000 000"
+STAFF_CONTACT = f"{STAFF_EMAIL}, {STAFF_PHONE}"
 
 SYSTEM_PROMPT = f"""\
 You are the help desk assistant of CityWheels, a bike rental shop.
@@ -29,7 +34,11 @@ For booking details call get_booking. For refunds call calculate_refund, \
 for prices call quote_price, for late return fees call calculate_late_fee.
 Never calculate amounts yourself. Give the amounts exactly as the tools return them.
 If a booking is not found, say so and ask the customer to check the number.
-If you need the bike type, rental length or number of bikes to quote a price, ask the customer.
+If you need the bike type, rental length or number of bikes to quote a price, ask the customer. \
+"A bike" means one bike.
+If a tool result has notes, pass them on to the customer.
+You can't cancel or change bookings. When a customer wants to, give the refund from \
+calculate_refund and tell them to contact the staff to do it: {STAFF_CONTACT}.
 When the policy says the staff decide, don't promise an outcome. \
 Tell the customer to contact the staff: {STAFF_CONTACT}.
 If the tools don't answer the question, or it is not about CityWheels, say you can't help \
@@ -50,7 +59,8 @@ TOOLS = {
     "calculate_refund": (
         calculate_refund,
         CalculateRefundArgs,
-        "Calculate how much the customer gets back if they cancel a booking.",
+        "Calculate how much the customer would get back if they cancelled a booking. "
+        "It doesn't cancel anything.",
     ),
     "quote_price": (
         quote_price,
@@ -110,7 +120,14 @@ def run_tool(name: str, arguments: str) -> dict:
     except ValidationError as e:
         errors = [f"{'.'.join(map(str, err['loc']))}: {err['msg']}" for err in e.errors()]
         return {"status": "invalid_arguments", "errors": errors}
-    return func(**args.model_dump())
+    try:
+        return func(**args.model_dump())
+    except Exception as e:
+        # A bug in a tool shouldn't crash the customer's conversation. The model gets a
+        # plain error and the details go to the log. Unit tests call the tools directly,
+        # so bugs still fail loudly there.
+        log.error("tool %s failed with %r, arguments %s", name, e, arguments)
+        return {"status": "tool_error", "name": name}
 
 
 def run_agent(client: OpenAI, model: str, messages: list[dict], question: str) -> AgentResult:
@@ -125,6 +142,8 @@ def run_agent(client: OpenAI, model: str, messages: list[dict], question: str) -
         if response.usage:
             input_tokens += response.usage.prompt_tokens
             output_tokens += response.usage.completion_tokens
+        if not response.choices:
+            break
         message = response.choices[0].message
         # Keep the message as it came, extra fields included: Gemini 3 rejects the next
         # request if the thought signature in the tool call is missing.
