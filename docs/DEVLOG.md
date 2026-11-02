@@ -149,6 +149,11 @@
 - Reran `refund-bare-number` on Ollama: passed, but it skipped search this time and called calculate_refund directly -> the pass says nothing about the fix. Also said refund comes "within 2 business days" (policy: 5 working days) without looking it up. Checker only checks amounts, so invented non-amount facts pass.
 - Combined report: `--report` with Gemini control, Groq, Ollama + `--recheck`. Added "runs" column (Ollama has 1).
 
+### CI
+- `.github/workflows/tests.yml`: uv sync --locked, ruff check + format check, pytest. On push and pull requests.
+- Action versions from current uv docs, pinned to commit hashes (a tag can be moved, a hash can't).
+- Checked locally in a copy of the project without `.env` -> 129 passed, no test depends on API keys.
+
 ### AI ASSISTANT NOTES
 - Claude wrote a refund test that mixed two scenarios (a 100% assert inside a test named after rounding) -> split it.
 - Claude suggested GitHub Models from memory (the task description lists it too), incl. endpoint URL and model name. Service was already retired. Noticed only when the token permission didn't exist. Lesson: double check provider docs before writing config.
